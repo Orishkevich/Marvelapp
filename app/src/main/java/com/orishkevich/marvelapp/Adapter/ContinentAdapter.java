@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.orishkevich.marvelapp.Model.Continent;
-import com.orishkevich.marvelapp.Model.Country;
+
 import com.orishkevich.marvelapp.R;
 
 import java.util.ArrayList;
 
-/**
- * Created by Инженер-конструктор on 03.05.2017.
- */
+
 
 public class ContinentAdapter extends RecyclerView.Adapter<ContinentViewHolder> {
 
