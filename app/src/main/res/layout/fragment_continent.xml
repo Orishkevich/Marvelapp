@@ -1,20 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.orishkevich.marvelapp.ContinentFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <include
+        layout="@layout/memory_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <include
+        layout="@layout/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/my_recycler_view2"/>
 
 
 
-</FrameLayout>
+</LinearLayout>
