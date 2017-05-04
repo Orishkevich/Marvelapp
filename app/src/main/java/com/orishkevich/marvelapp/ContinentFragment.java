@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,7 +44,6 @@ public class ContinentFragment extends Fragment {
     public ContinentAdapter contAdapter;
     public LinearLayoutManager layoutManager;
     public ArrayList<Continent> cont;
-
     public String id;
 
     @Override
@@ -67,6 +69,7 @@ public class ContinentFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
+
         Log.d("ContinentFragment", "onViewCreate");
         try {
             XmlPullParser parser = getResources().getXml(R.xml.regions);
@@ -84,9 +87,9 @@ public class ContinentFragment extends Fragment {
                 parser.next();
             }
         } catch (Throwable t) {
-
+            Log.d("ContinentFragment=", "onFailure"+t.getMessage());
         }
-       ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+      ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
         TextView textView3 = (TextView)getActivity().findViewById(R.id.textView3);
         textView3.setText(bytesToHuman(FreeMemory()));
         progressBar.setMax(TotalMemory());
@@ -102,15 +105,10 @@ public class ContinentFragment extends Fragment {
         contAdapter.setOnItemClickListener(new ContinentAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View v, int position){
-                Log.d("ContinentFragment", "onItemClick1 ID="+position);
-                CountryFragment fragment = new CountryFragment();
+                Log.d("CountryFragment", "onItemClick1 ID="+position);
+                RegionFragment fragment = new RegionFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, fragment,"Country");
-                Bundle bundle = new Bundle();
-                id=cont.get(position).getName();
-                bundle.putString("key", id);
-                fragment.setArguments(bundle);
-                transaction.addToBackStack(null);
+                transaction.replace(R.id.frame, fragment,"Region");
                 transaction.commit();
 
 
@@ -118,7 +116,7 @@ public class ContinentFragment extends Fragment {
         });
 
     }
-    // https://inducesmile.com/android/how-to-get-android-ram-internal-and-external-memory-information/
+
     public int TotalMemory()
     {
 

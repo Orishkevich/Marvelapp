@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Country;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import java.util.ArrayList;
 
 
@@ -27,16 +29,35 @@ public class CountryFragment extends Fragment {
     public LinearLayoutManager layoutManager;
     public ArrayList<Country> count=new ArrayList<>();
     public String id;
+
     public CountryFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_vocab,container,false);
+        View view = inflater.inflate(R.layout.fragment_count,container,false);
         Bundle bundle = getArguments();
         if (bundle != null) {
             id= bundle.getString("key");
+        }
+        try {
+            XmlPullParser parser = getResources().getXml(R.xml.regions);
+
+            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+
+
+                if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("region")
+                        &&parser.getAttributeValue(0).equals("continent")
+
+                        ) {
+                    //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
+                    count.add(new Country(parser.getAttributeValue(1)));
+                }
+                parser.next();
+            }
+        } catch (Throwable t) {
+
         }
                 return view;
     }
@@ -53,7 +74,7 @@ public class CountryFragment extends Fragment {
         Log.d("CountryFragment", "onViewCreate");
 
 
-                    rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view2);
+                    rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view);
 
                     layoutManager = new LinearLayoutManager(getActivity());
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
