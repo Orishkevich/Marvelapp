@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.orishkevich.marvelapp.Adapter.ContinentAdapter;
@@ -39,114 +40,62 @@ public class ContinentFragment extends Fragment {
     public RecyclerView rvMain;
     public ContinentAdapter contAdapter;
     public LinearLayoutManager layoutManager;
-    public ArrayList<Continent> cont=new ArrayList<>();
-    ArrayList<String> list = new ArrayList<>();
+    public ArrayList<Continent> cont;
+
     public String id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("ContinentFragment", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_continent,container,false);
-      //  View view = inflater.inflate(R.layout.activity_memory,container,false);
-
-        StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-
-        long bytesAvailable = stat.getBlockSizeLong()  *stat.getBlockCountLong();
-        long megAvailable = bytesAvailable / 1048576;
-        Log.d("ContinentFragment","Available MB : "+megAvailable);
-// https://inducesmile.com/android/how-to-get-android-ram-internal-and-external-memory-information/
-        File path = Environment.getDataDirectory();
-        StatFs stat2 = new StatFs(path.getPath());
-        long blockSize = stat2.getBlockSizeLong();
-        long availableBlocks = stat2.getAvailableBlocksLong();
-        String format =  Formatter.formatFileSize(getActivity(), availableBlocks * blockSize);
-        Log.d("ContinentFragment","Format : "+format);
-
-
-
-
-
-        ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
-       // progressBar.setVisibility(ProgressBar.VISIBLE);
-// запускаем длительную операцию
-//        progressBar.setVisibility(ProgressBar.INVISIBLE);
 
 
         return view;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("ContinentFragment", "onCreate");
+        cont=new ArrayList<>();
 
         super.onCreate(savedInstanceState);
-
-                    try {
-                XmlPullParser parser = getResources().getXml(R.xml.regions);
-
-                while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-
-
-                    if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("region")
-                          &&parser.getAttributeValue(0).equals("continent")
-
-                            ) {
-                        Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
-                        cont.add(new Continent(parser.getAttributeValue(1)));
-                    }
-                    parser.next();
-                }
-            } catch (Throwable t) {
-
-            }
-
-
-        ListView memoryList = (ListView)getActivity().findViewById(R.id.list_of_memory);
-
-        List<Memory> memoryDataSource = new ArrayList<Memory>();
-
-        String heading = "RAM Information";
-        long totalRamValue = totalRamMemorySize();
-        long freeRamValue = freeRamMemorySize();
-        long usedRamValue = totalRamValue - freeRamValue;
-        int imageIcon = R.drawable.piechart;
-
-        Memory mMemory = new Memory(heading, formatSize(usedRamValue) + " MB", formatSize(freeRamValue) + " MB", formatSize(totalRamValue) + " MB", imageIcon);
-        memoryDataSource.add(mMemory);
-
-        String internalMemoryTitle = "Internal Memory Information";
-        long totalInternalValue = getTotalInternalMemorySize();
-        long freeInternalValue = getAvailableInternalMemorySize();
-        long usedInternalValue = totalInternalValue - freeInternalValue;
-        int internalIcon = R.drawable.piechartone;
-
-        Memory internalMemory = new Memory(internalMemoryTitle, formatSize(usedInternalValue), formatSize(freeInternalValue), formatSize(totalInternalValue), internalIcon);
-        memoryDataSource.add(internalMemory);
-
-        String externalMemoryTitle = "External Memory Information";
-        long totalExternalValue = getTotalExternalMemorySize();
-        long freeExternalValue = getAvailableExternalMemorySize();
-        long usedExternalValue = totalExternalValue - freeExternalValue;
-        int externalIcon = R.drawable.piecharttwo;
-
-        Memory externalMemory = new Memory(externalMemoryTitle, formatSize(usedExternalValue), formatSize(freeExternalValue), formatSize(totalExternalValue), externalIcon);
-        memoryDataSource.add(externalMemory);
-
-        MemoryAdapter memoryAdapter = new MemoryAdapter(getActivity(), memoryDataSource);
-        memoryList.setAdapter(memoryAdapter);
 
     }
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        Log.d("CountryFragment", "onViewCreate");
 
+        super.onViewCreated(view, savedInstanceState);
+
+        Log.d("ContinentFragment", "onViewCreate");
+        try {
+            XmlPullParser parser = getResources().getXml(R.xml.regions);
+
+            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+
+
+                if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("region")
+                        &&parser.getAttributeValue(0).equals("continent")
+
+                        ) {
+                    //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
+                    cont.add(new Continent(parser.getAttributeValue(1)));
+                }
+                parser.next();
+            }
+        } catch (Throwable t) {
+
+        }
+       ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+        TextView textView3 = (TextView)getActivity().findViewById(R.id.textView3);
+        textView3.setText(bytesToHuman(FreeMemory()));
+        progressBar.setMax(TotalMemory());
+        progressBar.setProgress(FreeMemory());
 
         rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view2);
-
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvMain.setLayoutManager(layoutManager);
-
         contAdapter = new ContinentAdapter(cont);
         rvMain.setAdapter(contAdapter);
 
@@ -168,101 +117,56 @@ public class ContinentFragment extends Fragment {
             }
         });
 
+    }
+    // https://inducesmile.com/android/how-to-get-android-ram-internal-and-external-memory-information/
+    public int TotalMemory()
+    {
 
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        int   Total  = (  statFs.getBlockCount() *  statFs.getBlockSize());
+        return Total;
+    }
+
+    public int FreeMemory()
+    {
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        int   Free   = (statFs.getAvailableBlocks() *  statFs.getBlockSize());
+        return Free;
+    }
+
+    public long BusyMemory()
+    {
+        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
+        long   Total  = ((long) statFs.getBlockCount() * (long) statFs.getBlockSize());
+        long   Free   = (statFs.getAvailableBlocks()   * (long) statFs.getBlockSize());
+        long   Busy   = Total - Free;
+        return Busy;
+    }
+    public static String floatForm (double d)
+    {
+        return new DecimalFormat("#.##").format(d);
     }
 
 
+    public static String bytesToHuman (long size)
+    {
+        long Kb = 1  * 1024;
+        long Mb = Kb * 1024;
+        long Gb = Mb * 1024;
+        long Tb = Gb * 1024;
+        long Pb = Tb * 1024;
+        long Eb = Pb * 1024;
 
-    private long freeRamMemorySize() {
-        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager) getActivity().getSystemService(ACTIVITY_SERVICE);
-        activityManager.getMemoryInfo(mi);
-        long availableMegs = mi.availMem / 1048576L;
+        if (size <  Kb)                 return floatForm(        size     ) + " byte";
+        if (size >= Kb && size < Mb)    return floatForm((double)size / Kb) + " Kb";
+        if (size >= Mb && size < Gb)    return floatForm((double)size / Mb) + " Mb";
+        if (size >= Gb && size < Tb)    return floatForm((double)size / Gb) + " Gb";
+        if (size >= Tb && size < Pb)    return floatForm((double)size / Tb) + " Tb";
+        if (size >= Pb && size < Eb)    return floatForm((double)size / Pb) + " Pb";
+        if (size >= Eb)                 return floatForm((double)size / Eb) + " Eb";
 
-        return availableMegs;
+        return "???";
     }
-
-    private long totalRamMemorySize() {
-        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager)getActivity().getSystemService(ACTIVITY_SERVICE);
-        activityManager.getMemoryInfo(mi);
-        long availableMegs = mi.totalMem / 1048576L;
-        return availableMegs;
-    }
-
-    public static boolean externalMemoryAvailable() {
-        return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-    }
-
-    public static long getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return availableBlocks * blockSize;
-    }
-
-    public static long getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return totalBlocks * blockSize;
-    }
-
-    public static long getAvailableExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
-            return availableBlocks * blockSize;
-        } else {
-            return 0;
-        }
-    }
-
-    public static long getTotalExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long totalBlocks = stat.getBlockCount();
-            return totalBlocks * blockSize;
-        } else {
-            return 0;
-        }
-    }
-
-    public static String formatSize(long size) {
-        String suffix = null;
-
-        if (size >= 1024) {
-            suffix = " KB";
-            size /= 1024;
-            if (size >= 1024) {
-                suffix = " MB";
-                size /= 1024;
-            }
-        }
-        StringBuilder resultBuffer = new StringBuilder(Long.toString(size));
-
-        int commaOffset = resultBuffer.length() - 3;
-        while (commaOffset > 0) {
-            resultBuffer.insert(commaOffset, ',');
-            commaOffset -= 3;
-        }
-        if (suffix != null) resultBuffer.append(suffix);
-        return resultBuffer.toString();
-    }
-
-    private String returnToDecimalPlaces(long values){
-        DecimalFormat df = new DecimalFormat("#.00");
-        String angleFormated = df.format(values);
-        return angleFormated;
-    }
-
-
 
 }
 

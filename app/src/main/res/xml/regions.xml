@@ -41,7 +41,7 @@
 			2. If download_suffix is not specified it is taken from parent region or from parent parent region ...
 			2.1 If parent region has inner_download_suffix, then download_suffix=inner_download_suffix
 		-->
-		<region type="continent" name="europe"
+		<region type="continent" name="Europe"
 			translate="=Europe" inner_download_suffix="europe" boundary="no" poly_extract="europe">
 
 	<!-- north-europe -->
@@ -338,7 +338,7 @@
 			<region name="switzerland" lang="de,fr,it" poly_extract="west-europe"/>
 		</region>
 
-		<region type="continent" name="asia" translate="=Asia" inner_download_suffix="asia" boundary="no" poly_extract="asia">
+		<region type="continent" name="Asia" translate="=Asia" inner_download_suffix="asia" boundary="no" poly_extract="asia">
 
 	<!-- east-asia -->
 			<region name="afghanistan" srtm="no" inner_download_prefix="$name" lang="ps,fa" poly_extract="east-asia">
@@ -999,7 +999,7 @@
 			</region>
 		</region>
 
-		<region type="continent" name="africa" translate="Africa;entity=node" map="no" srtm="no" hillshade="no" wiki="no" download_suffix="africa" poly_extract="africa" boundary="no">
+		<region type="continent" name="Africa" translate="Africa;entity=node" map="no" srtm="no" hillshade="no" wiki="no" download_suffix="africa" poly_extract="africa" boundary="no">
 			<region name="algeria" srtm="no" inner_download_prefix="$name" lang="ar,fr">
 				<region type="srtm" name="adrar" translate="name:en=Adrar;is_in:country=Algeria;entity=relation"/>
 				<region type="srtm" name="ain-defla" translate="Aïn Defla;entity=relation"/>
@@ -1297,7 +1297,7 @@
 
 		</region>
 
-		<region type="continent" name="southamerica" translate="=South America" inner_download_suffix="southamerica" boundary="no" poly_extract="south-america">
+		<region type="continent" name="Southamerica" translate="=South America" inner_download_suffix="southamerica" boundary="no" poly_extract="south-america">
 			<region name="argentina" hillshade="no" srtm="no" inner_download_prefix="$name" lang="es">
 				<region name="buenos-aires" translate="Buenos Aires;entity=relation"/>
 				<region type="hillshade" name="ciudad-de-buenos-aires" translate="name:en=Autonomous City of Buenos Aires;entity=relation"/>
@@ -1409,7 +1409,7 @@
 			<region name="venezuela" lang="es"/>
 		</region>
 
-		<region type="continent" name="centralamerica" translate="=Central America" inner_download_suffix="centralamerica" boundary="no" poly_extract="central-america">
+		<region type="continent" name="Centralamerica" translate="=Central America" inner_download_suffix="centralamerica" boundary="no" poly_extract="central-america">
 			<region name="anguilla" lang="en"/>
 			<region name="antigua-and-barbuda" translate="Antigua and Barbuda;entity=relation" lang="en" metric="km,miles" left_hand_navigation="yes"/>
 			<region name="aruba" lang="nl"/>
@@ -1446,7 +1446,7 @@
 			<region name="virgin-islands-us" translate="United States Virgin Islands;entity=node" lang="en" metric="miles"/>
 		</region>
 
-		<region type="continent" name="northamerica" translate="=North America" inner_download_suffix="northamerica" boundary="no" poly_extract="north-america">
+		<region type="continent" name="Northamerica" translate="=North America" inner_download_suffix="northamerica" boundary="no" poly_extract="north-america">
 			<region name="bermuda" lang="en"/>
 			<region name="canada" map="no" srtm="no" hillshade="no" inner_download_prefix="$name" lang="en,fr" road_signs="american" poly_extract="canada" roads="yes" join_road_files="yes">
 				<region name="alberta"/>
@@ -1637,7 +1637,7 @@
 			</region>
 		</region>
 
-		<region type="continent" name="australia-oceania" translate="Australia and Oceania;entity=relation" map="no" boundary="no" inner_download_suffix="australia-oceania" poly_extract="australia-oceania-all" left_hand_navigation="yes">
+		<region type="continent" name="Australia-oceania" translate="Australia and Oceania;entity=relation" map="no" boundary="no" inner_download_suffix="australia-oceania" poly_extract="australia-oceania-all" left_hand_navigation="yes">
 			<region name="new-zealand" translate="New Zealand;entity=node" lang="en,mi"/>
 			<region name="papua-new-guinea" translate="Papua New Guinea;entity=node" lang="en,ho"/>
 

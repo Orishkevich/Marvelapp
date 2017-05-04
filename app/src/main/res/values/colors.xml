@@ -8,4 +8,13 @@
     <color name="dark_green">#4C9042</color>
     <color name="white">#ffffff</color>
     <color name="brown">#B29571</color>
+
+    <color name="appbar">#ff8800</color>
+    <color name="statusbar">#e68200</color>
+    <color name="items">#ffffff</color>
+    <color name="activity">#eaeaea</color>
+    <color name="view_raz">#e5e5e5</color>
+    <color name="text_items">#212121</color>
+    <color name="ic_world">#727272</color>
+
 </resources>
