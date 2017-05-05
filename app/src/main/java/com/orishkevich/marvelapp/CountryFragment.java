@@ -2,6 +2,7 @@ package com.orishkevich.marvelapp;
 
 
 
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,14 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
+import com.orishkevich.marvelapp.Model.Continent;
 import com.orishkevich.marvelapp.Model.Country;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
-
+import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
 
 public class CountryFragment extends Fragment {
@@ -63,25 +69,48 @@ public class CountryFragment extends Fragment {
             XmlPullParser parser = getResources().getXml(R.xml.regions);
 
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+                switch (parser.getEventType()) {
+                    case XmlPullParser.START_DOCUMENT:
+                        Log.d("CountryFragment", "START_DOCUMENT");
+                        break;
 
-                if (parser.getEventType() == XmlPullParser.START_TAG
-                        && parser.getName().equals("region")
+                    case XmlPullParser.START_TAG:
+                        if (parser.getEventType() == XmlPullParser.START_TAG
+                                &&parser.getName().equals("region")
                         &&parser.getAttributeValue(1).equals(id)
-                        && parser.getAttributeName(0).equals("name")
                         )
                 {
-
-                        if (parser.getEventType() == XmlPullParser.START_TAG
+                        Log.d("CountryFragment", "FOUND!");
+                       /* if (parser.getEventType() == XmlPullParser.START_TAG
                                 && parser.getName().equals("region")
                                 && parser.getAttributeName(0).equals("name")) {
                             Log.d("CountryFragment", "ADD!");
                             count.add(new Country(parser.getAttributeValue(0)));
                         }
+*/
+                    while (parser.getEventType() != XmlPullParser.END_TAG) {
 
+
+                        if (parser.getEventType() == XmlPullParser.START_TAG
+                                && parser.getName().equals("region")
+                                && parser.getAttributeName(0).equals("name")
+
+                                ) {
+                            //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
+                            count.add(new Country(parser.getAttributeValue(0)));
+                        }
+                        parser.next();
+                    }
 
                 }
-
+                    case XmlPullParser.END_TAG:
+                       // Log.d("CountryFragment", "END_TAG: " + parser.getName());
+                        break;
+                    default:
+                        break;
+                }
                 parser.next();
+
             }
         } catch (Throwable t) {
             Log.d("CountryFragment", "There is an error");
