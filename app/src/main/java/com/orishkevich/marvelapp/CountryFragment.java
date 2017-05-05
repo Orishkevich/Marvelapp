@@ -21,7 +21,9 @@ import com.orishkevich.marvelapp.Model.Country;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -35,7 +37,7 @@ public class CountryFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private ArrayList<Country> count;
     private String id;
-
+    final String LOG_TAG = "CountryFragment";
     public CountryFragment() {
     }
 
@@ -66,55 +68,66 @@ public class CountryFragment extends Fragment {
 
 
         try {
-            XmlPullParser parser = getResources().getXml(R.xml.regions);
+            XmlPullParser xpp =getResources().getXml(R.xml.regions);
 
-            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
-                switch (parser.getEventType()) {
+            while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
+                switch (xpp.getEventType()) {
+                    // начало документа
                     case XmlPullParser.START_DOCUMENT:
-                        Log.d("CountryFragment", "START_DOCUMENT");
+                        Log.d(LOG_TAG, "START_DOCUMENT");
                         break;
-
+                    // начало тэга
                     case XmlPullParser.START_TAG:
-                        if (parser.getEventType() == XmlPullParser.START_TAG
-                                &&parser.getName().equals("region")
-                        &&parser.getAttributeValue(1).equals(id)
-                        )
-                {
-                        Log.d("CountryFragment", "FOUND!");
-                       /* if (parser.getEventType() == XmlPullParser.START_TAG
-                                && parser.getName().equals("region")
-                                && parser.getAttributeName(0).equals("name")) {
-                            Log.d("CountryFragment", "ADD!");
-                            count.add(new Country(parser.getAttributeValue(0)));
+
+
+                        for (int i = 0; i < xpp.getAttributeCount(); i++) {
+
+                            if (xpp.getAttributeValue(i).equals(id)) {
+                                for (int j = 0; j < xpp.getAttributeCount(); j++) {
+                                    if( xpp.getAttributeName(j).equals("name"))
+                                    {
+                                        Log.d(LOG_TAG, "COUNTRY="+xpp.getAttributeValue(j));
+                                        Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
+                                        xpp.next();
+
+                                        if ((xpp.getAttributeName(0).equals("name")||xpp.getAttributeName(1).equals("name"))
+
+                                                ) {
+                                            Log.d("Region", "1="+ xpp.getAttributeValue(0));
+                                            count.add(new Country(xpp.getAttributeValue(0)));
+                                            Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
+                                            xpp.next();
+                                            Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
+                                        }
+                                    }
+                                }
+                            }
                         }
-*/
-                    while (parser.getEventType() != XmlPullParser.END_TAG) {
-
-
-                        if (parser.getEventType() == XmlPullParser.START_TAG
-                                && parser.getName().equals("region")
-                                && parser.getAttributeName(0).equals("name")
-
-                                ) {
-                            //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
-                            count.add(new Country(parser.getAttributeValue(0)));
-                        }
-                        parser.next();
-                    }
-
-                }
-                    case XmlPullParser.END_TAG:
-                       // Log.d("CountryFragment", "END_TAG: " + parser.getName());
                         break;
+                    // конец тэга
+                    case XmlPullParser.END_TAG:
+                       /* for (int i = 0; i < xpp.getAttributeCount(); i++) {
+                             Log.d("END ATRIBUTTE", "VALUE="+xpp.getAttributeValue(i)+" NAME="+ xpp.getAttributeName(i));
+                            }*/
+
+                        break;
+                    // содержимое тэга
+                    case XmlPullParser.TEXT:
+
+                        break;
+
                     default:
                         break;
                 }
-                parser.next();
-
+                // следующий элемент
+                xpp.next();
             }
-        } catch (Throwable t) {
-            Log.d("CountryFragment", "There is an error");
-            t.printStackTrace();
+            Log.d(LOG_TAG, "END_DOCUMENT");
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
                     rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view);
                     layoutManager = new LinearLayoutManager(getActivity());

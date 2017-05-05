@@ -43,7 +43,6 @@ Context context;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         setTitle("Continent");
         ff = new ContinentFragment();
         fT = getSupportFragmentManager().beginTransaction();
