@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.orishkevich.marvelapp.Adapter.ContinentAdapter;
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Continent;
+import com.orishkevich.marvelapp.Model.Country;
 
 
 import org.xmlpull.v1.XmlPullParser;
@@ -40,26 +41,25 @@ import static android.content.Context.ACTIVITY_SERVICE;
 public class ContinentFragment extends Fragment {
 
     private String TAG = getClass().getName();
-    public RecyclerView rvMain;
-    public ContinentAdapter contAdapter;
-    public LinearLayoutManager layoutManager;
-    public ArrayList<Continent> cont;
-    public String id;
+    private RecyclerView rvMain;
+    private ContinentAdapter contAdapter;
+    private LinearLayoutManager layoutManager;
+    private ArrayList<Continent> cont;
+    private String id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d("ContinentFragment", "onCreateView");
         View view = inflater.inflate(R.layout.fragment_continent,container,false);
-
-
+        cont=new ArrayList<>();
         return view;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d("ContinentFragment", "onCreate");
-        cont=new ArrayList<>();
 
+        //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
     }
@@ -95,21 +95,27 @@ public class ContinentFragment extends Fragment {
         progressBar.setMax(TotalMemory());
         progressBar.setProgress(FreeMemory());
 
-        rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view2);
+        rvMain = (RecyclerView)getActivity().findViewById(R.id.recycler_view_cont);
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvMain.setLayoutManager(layoutManager);
         contAdapter = new ContinentAdapter(cont);
         rvMain.setAdapter(contAdapter);
-
         contAdapter.setOnItemClickListener(new ContinentAdapter.OnItemClickListener(){
             @Override
             public void onItemClick(View v, int position){
-                Log.d("CountryFragment", "onItemClick1 ID="+position);
-                RegionFragment fragment = new RegionFragment();
+
+                CountryFragment fragment = new CountryFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.frame, fragment,"Region");
+                transaction.replace(R.id.frame, fragment,"Country");
+                Bundle bundle = new Bundle();
+                id=cont.get(position).getName();
+                bundle.putString("key", id);
+                Log.d("CountryFragment", "onItemClick1 ID="+id);
+                fragment.setArguments(bundle);
+                transaction.addToBackStack(null);
                 transaction.commit();
+
 
 
             }

@@ -26,7 +26,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryViewHolder> {
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
-        this.listener = listener;
+                this.listener = listener;
     }
 
     public CountryAdapter(ArrayList<Country> count){
@@ -38,7 +38,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryViewHolder> {
     public void onBindViewHolder(CountryViewHolder countViewHolder, int i){
 
         Country current = count.get(i);
-        countViewHolder.tvName.setText(current.getName());
+        countViewHolder.name_count.setText(current.getName());
         }
 
     @Override

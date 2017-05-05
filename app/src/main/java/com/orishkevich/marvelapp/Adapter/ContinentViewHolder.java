@@ -11,18 +11,18 @@ import com.orishkevich.marvelapp.R;
 
 public class ContinentViewHolder  extends RecyclerView.ViewHolder {
 
-    public TextView tvName;
+    public TextView name_cont;
 
     public  ContinentViewHolder(final View itemView){
         super(itemView);
 
-        tvName = (TextView)itemView.findViewById(R.id.tvName);
+        name_cont = (TextView)itemView.findViewById(R.id.name_cont);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CountryAdapter.listener!=null){
-                    CountryAdapter.listener.onItemClick(itemView, getLayoutPosition());
+                if (ContinentAdapter.listener!=null){
+                    ContinentAdapter.listener.onItemClick(itemView, getLayoutPosition());
                 }
             }
         });

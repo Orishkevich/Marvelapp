@@ -17,7 +17,7 @@
         android:src="@drawable/ic_map" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/name_count"
         android:layout_width="271dp"
         android:layout_height="52dp"
         android:textSize="16sp"

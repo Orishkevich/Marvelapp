@@ -24,11 +24,11 @@ import java.util.ArrayList;
 
 public class CountryFragment extends Fragment {
 
-    public RecyclerView rvMain;
-    public CountryAdapter countryAdapter;
-    public LinearLayoutManager layoutManager;
-    public ArrayList<Country> count=new ArrayList<>();
-    public String id;
+    private RecyclerView rvMain;
+    private CountryAdapter countryAdapter;
+    private LinearLayoutManager layoutManager;
+    private ArrayList<Country> count;
+    private String id;
 
     public CountryFragment() {
     }
@@ -37,33 +37,19 @@ public class CountryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_count,container,false);
+        count=new ArrayList<>();
         Bundle bundle = getArguments();
         if (bundle != null) {
             id= bundle.getString("key");
         }
-        try {
-            XmlPullParser parser = getResources().getXml(R.xml.regions);
-
-            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
 
 
-                if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("region")
-                        &&parser.getAttributeValue(0).equals("continent")
-
-                        ) {
-                    //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
-                    count.add(new Country(parser.getAttributeValue(1)));
-                }
-                parser.next();
-            }
-        } catch (Throwable t) {
-
-        }
                 return view;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+        //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
     }
@@ -71,20 +57,42 @@ public class CountryFragment extends Fragment {
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("CountryFragment", "onViewCreate");
 
 
+        try {
+            XmlPullParser parser = getResources().getXml(R.xml.regions);
+
+            while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
+
+                if (parser.getEventType() == XmlPullParser.START_TAG
+                        && parser.getName().equals("region")
+                        &&parser.getAttributeValue(1).equals(id)
+                        && parser.getAttributeName(0).equals("name")
+                        )
+                {
+
+                        if (parser.getEventType() == XmlPullParser.START_TAG
+                                && parser.getName().equals("region")
+                                && parser.getAttributeName(0).equals("name")) {
+                            Log.d("CountryFragment", "ADD!");
+                            count.add(new Country(parser.getAttributeValue(0)));
+                        }
+
+
+                }
+
+                parser.next();
+            }
+        } catch (Throwable t) {
+            Log.d("CountryFragment", "There is an error");
+            t.printStackTrace();
+        }
                     rvMain = (RecyclerView)getActivity().findViewById(R.id.my_recycler_view);
-
                     layoutManager = new LinearLayoutManager(getActivity());
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     rvMain.setLayoutManager(layoutManager);
-
-
-
                     countryAdapter = new CountryAdapter(count);
                     rvMain.setAdapter(countryAdapter);
-
                     countryAdapter.setOnItemClickListener(new CountryAdapter.OnItemClickListener(){
                         @Override
                         public void onItemClick(View v, int position){

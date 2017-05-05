@@ -13,16 +13,15 @@ import java.util.ArrayList;
 
 public class ContinentAdapter extends RecyclerView.Adapter<ContinentViewHolder> {
 
-    public static ContinentAdapter.OnItemClickListener listener;
+    public static OnItemClickListener listener;
     private ArrayList<Continent> cont;
 
 
     public interface OnItemClickListener{
         void onItemClick(View itemView, int position);
-
     }
 
-    public void setOnItemClickListener(ContinentAdapter.OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
 
@@ -36,7 +35,7 @@ public class ContinentAdapter extends RecyclerView.Adapter<ContinentViewHolder> 
     public void onBindViewHolder(ContinentViewHolder contViewHolder, int i){
        // Log.d("Adapter", "onBindViewHolder");
         Continent current = cont.get(i);
-        contViewHolder.tvName.setText(current.getName());
+        contViewHolder.name_cont.setText(current.getName());
     }
 
     @Override

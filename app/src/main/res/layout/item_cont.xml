@@ -17,7 +17,7 @@
         android:src="@drawable/ic_world_globe_dark" />
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/name_cont"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:textSize="16sp"

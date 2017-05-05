@@ -9,12 +9,12 @@ import com.orishkevich.marvelapp.R;
 
 public class CountryViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvName;
+        public TextView name_count;
 
         public CountryViewHolder(final View itemView){
             super(itemView);
 
-            tvName = (TextView)itemView.findViewById(R.id.tvName);
+            name_count = (TextView)itemView.findViewById(R.id.name_count);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

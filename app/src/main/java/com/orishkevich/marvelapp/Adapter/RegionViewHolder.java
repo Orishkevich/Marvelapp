@@ -15,7 +15,7 @@ public class RegionViewHolder extends RecyclerView.ViewHolder {
     public  RegionViewHolder(final View itemView){
         super(itemView);
 
-        tvName = (TextView)itemView.findViewById(R.id.tvName);
+        tvName = (TextView)itemView.findViewById(R.id.name_count);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
