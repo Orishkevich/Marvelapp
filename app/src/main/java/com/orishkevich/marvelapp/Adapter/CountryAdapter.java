@@ -42,13 +42,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryViewHolder> {
         if (!current.getMap()){countViewHolder.down.setVisibility(View.INVISIBLE);}
 
         Country record = count.get(i);
-        int iconResourceId = 0;
+
         switch (record.getDowload()) {
             case true:
-                iconResourceId = R.drawable.green_circle;
+
                 break;
             case false:
-                iconResourceId = R.drawable.red_circle;
+
                 break;
 
         }
