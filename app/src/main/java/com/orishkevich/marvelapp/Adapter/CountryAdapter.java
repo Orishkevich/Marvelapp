@@ -39,8 +39,9 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryViewHolder> {
 
         Country current = count.get(i);
         countViewHolder.name_count.setText(current.getName());
-        }
-
+        if (!current.getMap()){countViewHolder.down.setVisibility(View.INVISIBLE);}
+       // else {countViewHolder.down.setVisibility(View.INVISIBLE);}
+}
     @Override
     public CountryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
 

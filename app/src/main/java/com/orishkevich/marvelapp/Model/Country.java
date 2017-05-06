@@ -5,17 +5,31 @@ package com.orishkevich.marvelapp.Model;
  */
 
 public class Country {
+
+    private String name;
+    private boolean map;
+
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        name = name;
     }
 
-    public Country(String name) {
-        Name = name;
+    public Country(String name,boolean map) {
+        this.name = name;
+        this.map = map;
     }
 
-    private String Name;
+
+    public boolean getMap() {
+        return map;
+    }
+
+    public void setMap(boolean map) {
+        this.map = map;
+    }
+
+
 }

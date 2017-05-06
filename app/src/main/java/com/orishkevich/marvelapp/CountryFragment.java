@@ -38,6 +38,7 @@ public class CountryFragment extends Fragment {
     private ArrayList<Country> count;
     private String id;
     final String LOG_TAG = "CountryFragment";
+    boolean map=true;
     public CountryFragment() {
     }
 
@@ -69,7 +70,6 @@ public class CountryFragment extends Fragment {
 
         try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
-
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
                 switch (xpp.getEventType()) {
                     // начало документа
@@ -92,20 +92,31 @@ public class CountryFragment extends Fragment {
                                           !(xpp.getAttributeValue(0).equals("continent"))) {
                                        if ((xpp.getAttributeName(0).equals("name")
                                                ||xpp.getAttributeName(1).equals("name"))) {
-                                            Log.d("Country", "="+ xpp.getAttributeValue(0));
-                                            //получаю имя первой странны
-                                            count.add(new Country(xpp.getAttributeValue(0)));
-                                           Log.d("Country", "Depth="+  xpp.getDepth());
+                                            map=true;
+                                           for(int x = 0; x < xpp.getAttributeCount(); x++){
+
+                                               if (xpp.getAttributeName(x).equals("map")) {
+                                                   switch (xpp.getAttributeValue(x)){
+                                                       case "no":
+                                                           map = false;
+                                                           break;
+                                                       default:
+                                                           break;
+                                                   }
+
+                                               }
+
+                                           }
+                                           Log.d(LOG_TAG, "Country="+xpp.getAttributeValue(0));
+                                           Log.d(LOG_TAG, "Map="+map);
+                                           count.add(new Country(xpp.getAttributeValue(0),map));
                                             xpp.next();
                                            while(xpp.getDepth()>3){
                                                xpp.next();
                                            }
                                         }
-
                                           xpp.next();
                                         }
-
-
                                     }
                                 }
                             }
@@ -114,9 +125,6 @@ public class CountryFragment extends Fragment {
                         break;
                     // конец тэга
                     case XmlPullParser.END_TAG:
-                       /* for (int i = 0; i < xpp.getAttributeCount(); i++) {
-                             Log.d("END ATRIBUTTE", "VALUE="+xpp.getAttributeValue(i)+" NAME="+ xpp.getAttributeName(i));
-                            }*/
 
                         break;
                     // содержимое тэга
