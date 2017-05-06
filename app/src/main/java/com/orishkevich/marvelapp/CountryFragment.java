@@ -85,7 +85,6 @@ public class CountryFragment extends Fragment {
                                 for (int j = 0; j < xpp.getAttributeCount(); j++) {
                                     if( xpp.getAttributeName(j).equals("name"))
                                     {
-                                        Log.d(LOG_TAG, "COUNTRY="+xpp.getAttributeValue(j));
 
                                       xpp.next();
 
@@ -93,35 +92,24 @@ public class CountryFragment extends Fragment {
                                           !(xpp.getAttributeValue(0).equals("continent"))) {
                                        if ((xpp.getAttributeName(0).equals("name")
                                                ||xpp.getAttributeName(1).equals("name"))) {
-                                            Log.d("Region", "1="+ xpp.getAttributeValue(0));
+                                            Log.d("Country", "="+ xpp.getAttributeValue(0));
                                             //получаю имя первой странны
                                             count.add(new Country(xpp.getAttributeValue(0)));
-                                           xpp.next();
-
-                                        }
+                                           Log.d("Country", "Depth="+  xpp.getDepth());
                                             xpp.next();
+                                           while(xpp.getDepth()>3){
+                                               xpp.next();
+                                           }
+                                        }
+
+                                          xpp.next();
                                         }
 
 
                                     }
                                 }
                             }
-                             /*else if ( xpp.getAttributeName(i).equals("name")){
-                                Log.d(LOG_TAG, "COUNTRY="+xpp.getAttributeValue(i));
 
-                                xpp.next();
-
-                                if ((xpp.getAttributeName(0).equals("name")||xpp.getAttributeName(1).equals("name"))
-
-                                        ) {
-                                    Log.d("Region", "1="+ xpp.getAttributeValue(0));
-                                    //получаю имя первой странны
-                                    count.add(new Country(xpp.getAttributeValue(0)));
-
-                                    xpp.next();
-                                    // break;
-                                }
-                            }*/
                         }
                         break;
                     // конец тэга
