@@ -14,7 +14,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         public CountryViewHolder(final View itemView){
             super(itemView);
 
-            name_count = (TextView)itemView.findViewById(R.id.name_count);
+            name_count = (TextView)itemView.findViewById(R.id.recyclerViewItemName);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

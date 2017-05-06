@@ -79,7 +79,6 @@ public class CountryFragment extends Fragment {
                     // начало тэга
                     case XmlPullParser.START_TAG:
 
-
                         for (int i = 0; i < xpp.getAttributeCount(); i++) {
 
                             if (xpp.getAttributeValue(i).equals(id)) {
@@ -87,21 +86,42 @@ public class CountryFragment extends Fragment {
                                     if( xpp.getAttributeName(j).equals("name"))
                                     {
                                         Log.d(LOG_TAG, "COUNTRY="+xpp.getAttributeValue(j));
-                                        Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
-                                        xpp.next();
 
-                                        if ((xpp.getAttributeName(0).equals("name")||xpp.getAttributeName(1).equals("name"))
+                                      xpp.next();
 
-                                                ) {
+                                      while ((xpp.getEventType() == XmlPullParser.START_TAG)&&
+                                          !(xpp.getAttributeValue(0).equals("continent"))) {
+                                       if ((xpp.getAttributeName(0).equals("name")
+                                               ||xpp.getAttributeName(1).equals("name"))) {
                                             Log.d("Region", "1="+ xpp.getAttributeValue(0));
+                                            //получаю имя первой странны
                                             count.add(new Country(xpp.getAttributeValue(0)));
-                                            Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
-                                            xpp.next();
-                                            Log.d(LOG_TAG, "DEPTH="+xpp.getDepth());
+                                           xpp.next();
+
                                         }
+                                            xpp.next();
+                                        }
+
+
                                     }
                                 }
                             }
+                             /*else if ( xpp.getAttributeName(i).equals("name")){
+                                Log.d(LOG_TAG, "COUNTRY="+xpp.getAttributeValue(i));
+
+                                xpp.next();
+
+                                if ((xpp.getAttributeName(0).equals("name")||xpp.getAttributeName(1).equals("name"))
+
+                                        ) {
+                                    Log.d("Region", "1="+ xpp.getAttributeValue(0));
+                                    //получаю имя первой странны
+                                    count.add(new Country(xpp.getAttributeValue(0)));
+
+                                    xpp.next();
+                                    // break;
+                                }
+                            }*/
                         }
                         break;
                     // конец тэга
