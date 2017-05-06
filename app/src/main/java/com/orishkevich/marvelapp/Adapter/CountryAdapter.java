@@ -36,11 +36,27 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryViewHolder> {
 
     @Override
     public void onBindViewHolder(CountryViewHolder countViewHolder, int i){
-
+        //public void onBindViewHolder(ViewHolder viewHolder, int i)
         Country current = count.get(i);
         countViewHolder.name_count.setText(current.getName());
         if (!current.getMap()){countViewHolder.down.setVisibility(View.INVISIBLE);}
-       // else {countViewHolder.down.setVisibility(View.INVISIBLE);}
+
+        Country record = count.get(i);
+        int iconResourceId = 0;
+        switch (record.getDowload()) {
+            case true:
+                iconResourceId = R.drawable.green_circle;
+                break;
+            case false:
+                iconResourceId = R.drawable.red_circle;
+                break;
+
+        }
+        countViewHolder.icon.setImageResource(iconResourceId);
+        countViewHolder.name.setText(record.getName());
+        countViewHolder.deleteButtonListener.setRecord(record);
+        countViewHolder.copyButtonListener.setRecord(record);
+
 }
     @Override
     public CountryViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){

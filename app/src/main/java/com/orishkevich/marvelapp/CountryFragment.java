@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
@@ -39,6 +41,7 @@ public class CountryFragment extends Fragment {
     private String id;
     final String LOG_TAG = "CountryFragment";
     boolean map=true;
+    boolean download=false;
     public CountryFragment() {
     }
 
@@ -67,6 +70,8 @@ public class CountryFragment extends Fragment {
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ProgressBar progDown=(ProgressBar)getActivity().findViewById(R.id.prog_down);
+        progDown.setVisibility(View.INVISIBLE);
 
         try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
@@ -109,7 +114,7 @@ public class CountryFragment extends Fragment {
                                            }
                                            Log.d(LOG_TAG, "Country="+xpp.getAttributeValue(0));
                                            Log.d(LOG_TAG, "Map="+map);
-                                           count.add(new Country(firstUpperCase(xpp.getAttributeValue(0)),map));
+                                           count.add(new Country(firstUpperCase(xpp.getAttributeValue(0)),map,download));
                                             xpp.next();
                                            while(xpp.getDepth()>3){
                                                xpp.next();
@@ -154,17 +159,20 @@ public class CountryFragment extends Fragment {
                     countryAdapter.setOnItemClickListener(new CountryAdapter.OnItemClickListener(){
                         @Override
                         public void onItemClick(View v, int position){
-                            Log.d("CountryFragment", "onItemClick1 ID="+position);
-                            RegionFragment fragment = new RegionFragment();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.frame, fragment,"Region");
-                            Bundle bundle = new Bundle();
-                            id=count.get(position).getName();
-                            bundle.putString("key", id);
-                            fragment.setArguments(bundle);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
-
+                            if(v.getClass().equals(ImageButton.class))Log.d("CountryFragment", "Click Image button ID="+position);
+                            else {
+                                Log.d("CountryFragment", "v.getClass()=" + v.getClass());
+                                Log.d("CountryFragment", "onItemClick1 ID=" + position);
+                                RegionFragment fragment = new RegionFragment();
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.frame, fragment, "Region");
+                                Bundle bundle = new Bundle();
+                                id = count.get(position).getName();
+                                bundle.putString("key", id);
+                                fragment.setArguments(bundle);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
+                            }
 
                         }
                     });

@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,12 +7,19 @@
     android:orientation="vertical"
     android:background="?android:colorBackground">
 
+    <ProgressBar
+        android:id="@+id/prog_down"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:indeterminate="false" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/my_recycler_view"/>
+        android:id="@+id/my_recycler_view"
+        android:layout_below="@+id/prog_down" />
 
 
 
-</RelativeLayout>
+</LinearLayout >

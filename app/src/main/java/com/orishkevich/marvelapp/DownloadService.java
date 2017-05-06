@@ -54,7 +54,7 @@ public class DownloadService extends IntentService {
     private void initDownload(){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://download.learn2crack.com/")
+                .baseUrl("http://download.osmand.net")
                 .build();
 
         RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);

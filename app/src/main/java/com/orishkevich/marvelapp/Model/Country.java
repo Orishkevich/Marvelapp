@@ -8,6 +8,16 @@ public class Country {
 
     private String name;
     private boolean map;
+    private boolean dowload;
+    public boolean getDowload() {
+        return dowload;
+    }
+
+    public void setDowload(boolean dowload) {
+        this.dowload = dowload;
+    }
+
+
 
     public String getName() {
         return name;
@@ -17,9 +27,10 @@ public class Country {
         name = name;
     }
 
-    public Country(String name,boolean map) {
+    public Country(String name,boolean map,boolean dowload) {
         this.name = name;
         this.map = map;
+        this.dowload = dowload;
     }
 
 
