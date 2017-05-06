@@ -78,11 +78,9 @@ public class ContinentFragment extends Fragment {
 
 
                 if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("region")
-                        &&parser.getAttributeValue(0).equals("continent")
-
-                        ) {
-                    //Log.d("ContinentFragment","Continent : "+parser.getAttributeValue(null,"continent"));
-                    cont.add(new Continent(parser.getAttributeValue(1)));
+                        &&(parser.getAttributeValue(0).equals("continent")||parser.getAttributeValue(0).equals("russia"))) {
+                    if(parser.getAttributeValue(0).equals("russia"))  cont.add(new Continent(firstUpperCase(parser.getAttributeValue(0))));
+                    else cont.add(new Continent(firstUpperCase(parser.getAttributeValue(1))));
                 }
                 parser.next();
             }
@@ -171,7 +169,10 @@ public class ContinentFragment extends Fragment {
 
         return "???";
     }
-
+    public String firstUpperCase(String word){
+        if(word == null || word.isEmpty()) return "";//или return word;
+        return word.substring(0, 1).toUpperCase() + word.substring(1);
+    }
 }
 
 

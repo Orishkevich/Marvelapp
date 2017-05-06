@@ -109,7 +109,7 @@ public class CountryFragment extends Fragment {
                                            }
                                            Log.d(LOG_TAG, "Country="+xpp.getAttributeValue(0));
                                            Log.d(LOG_TAG, "Map="+map);
-                                           count.add(new Country(xpp.getAttributeValue(0),map));
+                                           count.add(new Country(firstUpperCase(xpp.getAttributeValue(0)),map));
                                             xpp.next();
                                            while(xpp.getDepth()>3){
                                                xpp.next();
@@ -172,7 +172,10 @@ public class CountryFragment extends Fragment {
 
                 }
 
-
+    public String firstUpperCase(String word){
+        if(word == null || word.isEmpty()) return "";//или return word;
+        return word.substring(0, 1).toUpperCase() + word.substring(1);
+    }
 
 
 
