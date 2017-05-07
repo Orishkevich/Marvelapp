@@ -17,13 +17,14 @@ import android.widget.ProgressBar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class DownloadManagerActivity extends Activity {
 
     private long enqueue;
     private DownloadManager dm;
     protected ProgressBar mProgressBar;
     protected long downloadId;
-    protected DownloadManager manager;
+
 
 
     /** Called when the activity is first created. */
@@ -85,12 +86,13 @@ public class DownloadManagerActivity extends Activity {
                 long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                 cursor.close();
                 final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
-                runOnUiThread(new Runnable(){
-                    @Override
-                    public void run(){
+                Thread t = new Thread(new Runnable() {
+                    public void run() {
                         mProgressBar.setProgress(dl_progress);
+
                     }
                 });
+                t.start();
 
             }
 

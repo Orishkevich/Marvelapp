@@ -4,29 +4,19 @@ import android.app.DownloadManager;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-
 import com.orishkevich.marvelapp.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import static android.content.Context.DOWNLOAD_SERVICE;
 
-import okhttp3.ResponseBody;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-import retrofit2.Call;
 
 
 public class CountryViewHolder extends RecyclerView.ViewHolder {
@@ -35,16 +25,25 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     public  TextView name_count;
     public  ImageButton down;
     public ProgressBar pd;
+
+
+    private long enqueue;
+    private DownloadManager dm;
+    protected ProgressBar mProgressBar;
+    protected long downloadId;
+
+
    // public  ImageButton canc;
     private DownButtonListener downButtonListener;
    // private CancelButtonListener cancButtonListener;
 
         public CountryViewHolder(final View itemView){
             super(itemView);
+            dm = (DownloadManager) itemView.getContext().getSystemService(DOWNLOAD_SERVICE);
+
             name_count = (TextView)itemView.findViewById(R.id.recyclerViewItemName);
             down = (ImageButton) itemView.findViewById(R.id.recyclerViewItemDownButton);
             pd=(ProgressBar)itemView.findViewById(R.id.prog_down_item);
-
             downButtonListener = new DownButtonListener();
             down.setOnClickListener(downButtonListener);
             //cancButtonListener = new CancelButtonListener();
@@ -65,7 +64,35 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void onClick(View v) {
             pd.setVisibility(View.VISIBLE);
-           // initDownload();
+
+            DownloadManager.Request request = new DownloadManager.Request(
+                    Uri.parse("http://download.osmand.net/download.php?standard=yes&file=Denmark_europe_2.obf.zip"));
+
+            enqueue = dm.enqueue(request);
+            mProgressBar = pd;
+            Timer myTimer = new Timer();
+            myTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    DownloadManager.Query q = new DownloadManager.Query();
+                    q.setFilterById(enqueue);
+                    final Cursor cursor = dm.query(q);
+                    cursor.moveToFirst();
+                    long bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                    long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    cursor.close();
+                    final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+                    Thread t = new Thread(new Runnable() {
+                        public void run() {
+                            mProgressBar.setProgress(dl_progress);
+
+                        }
+                    });
+                    t.start();
+
+                }
+
+            }, 0, 10);
             Log.d("CountryViewHolder", "DownButtonListener" );
         }
     }
@@ -80,7 +107,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
 
 
 
-   
+
 
 }
 
