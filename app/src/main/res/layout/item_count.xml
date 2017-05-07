@@ -49,8 +49,14 @@
         android:indeterminate="false"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
-        android:max="100"
-        android:progress="20" />
+         />
+
+    <TextView
+        android:id="@+id/progress_text"
+        android:layout_below="@+id/prog_down_item"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
 
 

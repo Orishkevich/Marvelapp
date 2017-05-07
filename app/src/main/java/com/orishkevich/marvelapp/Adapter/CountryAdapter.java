@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.orishkevich.marvelapp.Model.Country;
 import com.orishkevich.marvelapp.R;
-
 import java.util.ArrayList;
 
 /**
