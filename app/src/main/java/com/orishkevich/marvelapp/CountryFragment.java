@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
+import com.orishkevich.marvelapp.Adapter.CountryViewHolder;
 import com.orishkevich.marvelapp.Model.Continent;
 import com.orishkevich.marvelapp.Model.Country;
 
@@ -71,7 +72,10 @@ public class CountryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ProgressBar progDown=(ProgressBar)getActivity().findViewById(R.id.prog_down);
-        progDown.setVisibility(View.INVISIBLE);
+
+
+        progDown.setVisibility(View.GONE);
+
 
         try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
@@ -178,6 +182,8 @@ public class CountryFragment extends Fragment {
                     });
 
 
+
+
                 }
 
     public String firstUpperCase(String word){
@@ -185,7 +191,16 @@ public class CountryFragment extends Fragment {
         return word.substring(0, 1).toUpperCase() + word.substring(1);
     }
 
+    public class DownButtonListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View v) {
+            // download();
+            Log.d("CountryViewHolder", "DownButtonListener" );
+        }
+
+
+    }
 
 
 }

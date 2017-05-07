@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="52dp"
     android:weightSum="1"
-    android:background="@color/items"
-    >
+    android:background="@color/items"    >
 
     <ImageButton
         android:id="@+id/recyclerViewItemIcon"
@@ -22,6 +22,7 @@
         android:id="@+id/recyclerViewItemName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="50dp"
         android:layout_toRightOf="@+id/recyclerViewItemIcon"
         android:layout_toEndOf="@+id/recyclerViewItemIcon"
         android:layout_centerVertical="true"
@@ -37,6 +38,19 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
          />
+
+    <ProgressBar
+        android:id="@+id/prog_down_item"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recyclerViewItemIcon"
+        android:gravity="center"
+        android:indeterminate="false"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:max="100"
+        android:progress="20" />
 </RelativeLayout>
 
 

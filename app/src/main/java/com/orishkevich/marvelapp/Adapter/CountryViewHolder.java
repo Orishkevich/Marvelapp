@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.orishkevich.marvelapp.R;
@@ -13,6 +14,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
 
     public  TextView name_count;
     public  ImageButton down;
+    public ProgressBar pd;
    // public  ImageButton canc;
     private DownButtonListener downButtonListener;
    // private CancelButtonListener cancButtonListener;
@@ -21,6 +23,8 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
             super(itemView);
             name_count = (TextView)itemView.findViewById(R.id.recyclerViewItemName);
             down = (ImageButton) itemView.findViewById(R.id.recyclerViewItemDownButton);
+            pd=(ProgressBar)itemView.findViewById(R.id.prog_down_item);
+
             downButtonListener = new DownButtonListener();
             down.setOnClickListener(downButtonListener);
             //cancButtonListener = new CancelButtonListener();
@@ -36,15 +40,13 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-    private class DownButtonListener implements View.OnClickListener {
+    public class DownButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-           // download();
+            pd.setVisibility(View.VISIBLE);
             Log.d("CountryViewHolder", "DownButtonListener" );
         }
-
-
     }
 
     private class CancelButtonListener implements View.OnClickListener {
@@ -53,8 +55,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         public void onClick(View v) {
            // cancel();
         }
-
-
     }
+
 }
 
