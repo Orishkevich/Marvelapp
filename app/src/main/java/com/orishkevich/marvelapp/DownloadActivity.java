@@ -1,6 +1,7 @@
 package com.orishkevich.marvelapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
+
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 
 import com.orishkevich.marvelapp.Model.Download;
 
@@ -22,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class DownloadActivity extends AppCompatActivity {
+public class DownloadActivity extends Activity {
 
     public static final String MESSAGE_PROGRESS = "message_progress";
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -36,7 +38,6 @@ public class DownloadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
-
         registerReceiver();
     }
 

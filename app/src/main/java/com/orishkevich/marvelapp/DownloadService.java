@@ -41,7 +41,7 @@ public class DownloadService extends IntentService {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationBuilder = new NotificationCompat.Builder(this)
-
+             .setSmallIcon(R.drawable.ic_download)
                 .setContentTitle("Download")
                 .setContentText("Downloading File")
                 .setAutoCancel(true);
@@ -54,7 +54,8 @@ public class DownloadService extends IntentService {
     private void initDownload(){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://download.osmand.net")
+                .baseUrl("https://download.learn2crack.com/")
+                // .baseUrl("http://download.osmand.net")
                 .build();
 
         RetrofitInterface retrofitInterface = retrofit.create(RetrofitInterface.class);

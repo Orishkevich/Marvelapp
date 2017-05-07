@@ -5,10 +5,24 @@ package com.orishkevich.marvelapp.Model;
  */
 
 public class Country {
-
+//http://download.osmand.net/download.php?standard=yes&file=Denmark_europe_2.obf.zip)
     private String name;
     private boolean map;
     private boolean dowload;
+    private String continent;
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public void setCountry(String continent) {
+        this.continent = continent;
+    }
+
+
+
+
+
     public boolean getDowload() {
         return dowload;
     }
@@ -27,10 +41,11 @@ public class Country {
         name = name;
     }
 
-    public Country(String name,boolean map,boolean dowload) {
+    public Country(String name,boolean map,boolean dowload,String country) {
         this.name = name;
         this.map = map;
         this.dowload = dowload;
+        this.continent=continent;
     }
 
 
@@ -42,5 +57,9 @@ public class Country {
         this.map = map;
     }
 
+public String getAdress(Country count){
+    //http://download.osmand.net/download.php?standard=yes&file=Denmark_europe_2.obf.zip)
 
+    return count.getName()+"_"+count.getContinent()+"_2.obf.zip";
+}
 }
