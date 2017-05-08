@@ -5,9 +5,18 @@ package com.orishkevich.marvelapp.Model;
  */
 
 public class MessageEvent {
-    public final String message;
+    public String getMessage() {
+        return message;
+    }
 
-    public MessageEvent(String message) {
+    public int getDl() {
+        return dl;
+    }
+
+    public final String message;
+    public final int  dl;
+    public MessageEvent(String message, int dl) {
         this.message = message;
+        this.dl = dl;
     }
 }

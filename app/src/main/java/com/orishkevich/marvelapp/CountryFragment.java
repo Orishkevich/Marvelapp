@@ -74,7 +74,6 @@ public class CountryFragment extends Fragment {
     protected long downloadId;
 
 
-
     DownloadManager downloadManager=dm;
     String downloadFileUrl = "http://www.101apps.co.za/" +
             "images/headers/101_logo_very_small.jpg";
@@ -364,8 +363,7 @@ public class CountryFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-    // В этом методе-колбэке мы получаем наши данные
-    // (объект `event` типа класса-модели MessageEvent)
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MessageEvent event){
 
@@ -373,9 +371,22 @@ public class CountryFragment extends Fragment {
         textView3 = (TextView)getActivity().findViewById(R.id.country);
         viewById = getActivity().findViewById(R.id.PD);
         viewById.setVisibility(View.VISIBLE);
+        mProgressBar=(ProgressBar) getActivity().findViewById(R.id.prog_down_items);
         textView3.setText(event.message);
-        textView2.setText("50%");
-        Log.d("CountryFragment", "onEvent=" +  event.message);
+        final int dl=event.getDl();
+
+        textView2.setText(String.valueOf(dl)+" %");
+
+
+        Thread tt = new Thread(new Runnable() {
+            public void run() {
+
+                mProgressBar.setProgress(dl);
+
+            }
+        });
+        tt.start();
+        Log.d("CountryFragment", "onEvent=" +  event.getMessage());
 
     }
 }

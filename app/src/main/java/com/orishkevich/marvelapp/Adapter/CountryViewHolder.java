@@ -39,8 +39,9 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     private long enqueue;
     private DownloadManager dm;
     private ProgressBar mProgressBar;
-
-
+    private  TextView name_count;
+    private  ImageButton down;
+    private ProgressBar pd;
     private DownButtonListener downButtonListener= new DownButtonListener();
 
     private CancelButtonListener cancButtonListener= new CancelButtonListener();
@@ -53,7 +54,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
             down = (ImageButton) itemView.findViewById(R.id.recyclerViewItemDownButton);
             pd=(ProgressBar)itemView.findViewById(R.id.prog_down_item);
             down.setOnClickListener(downButtonListener);
-           // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
+
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,10 +73,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onClick(View v) {
-           // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
-           // mProgressBar.setVisibility(View.VISIBLE);
-          //  textView3.setText(count.get(getAdapterPosition()).getName());
-          //  textView2.setText("50%");
+
             pd.setVisibility(View.VISIBLE);
             down.setImageResource(R.drawable.ic_action_remove_dark);
             down.setOnClickListener(cancButtonListener);
@@ -86,7 +84,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
             request.setVisibleInDownloadsUi(true);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);
 
-
+            enqueue = dm.enqueue(request);
 
 
 
@@ -119,39 +117,28 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     public TextView getName_count() {
         return name_count;
     }
-
     public void setName_count(TextView name_count) {
         this.name_count = name_count;
     }
-
     public ImageButton getDown() {
         return down;
     }
-
     public void setDown(ImageButton down) {
         this.down = down;
     }
-
-    private  TextView name_count;
-    private  ImageButton down;
-
-
-
-    private ProgressBar pd;
     public ProgressBar getPd() {
         return pd;
     }
-
     public void setPd(ProgressBar pd) {
         this.pd = pd;
     }
 
 private  void startProgress(){
 
-    EventBus.getDefault().post(new MessageEvent(count.get(getAdapterPosition()).getName()));
+
 
     try{
-                enqueue = dm.enqueue(request);
+
                 Timer myTimer = new Timer();
                 myTimer.schedule(new TimerTask() {
                     @Override
@@ -166,7 +153,9 @@ private  void startProgress(){
                         final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
                         Thread tt = new Thread(new Runnable() {
                             public void run() {
+                                EventBus.getDefault().post(new MessageEvent(count.get(getAdapterPosition()).getName(),dl_progress));
                                 pd.setProgress(dl_progress);
+
                             }
                         });
                         tt.start();
