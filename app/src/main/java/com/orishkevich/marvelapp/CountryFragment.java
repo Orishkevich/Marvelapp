@@ -3,11 +3,14 @@ package com.orishkevich.marvelapp;
 
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -23,8 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Country;
@@ -45,7 +50,7 @@ public class CountryFragment extends Fragment {
 
     public static final String MESSAGE_PROGRESS = "message_progress";
     private static final int PERMISSION_REQUEST_CODE = 1;
-    private ProgressBar mProgressBar;
+
     private TextView mProgressText;
     private RecyclerView rvMain;
     private CountryAdapter countryAdapter;
@@ -55,6 +60,23 @@ public class CountryFragment extends Fragment {
     final String LOG_TAG = "CountryFragment";
     boolean map=true;
     boolean download=false;
+
+    private long enqueue;
+    private DownloadManager dm;
+    protected ProgressBar mProgressBar;
+    protected long downloadId;
+
+
+
+    DownloadManager downloadManager=dm;
+    String downloadFileUrl = "http://www.101apps.co.za/" +
+            "images/headers/101_logo_very_small.jpg";
+    private long myDownloadReference= enqueue;
+    private BroadcastReceiver receiverDownloadComplete;
+    private BroadcastReceiver receiverNotificationClicked;
+
+
+
     public CountryFragment() {
     }
 
@@ -74,7 +96,34 @@ public class CountryFragment extends Fragment {
 
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                    downloadId = intent.getLongExtra(
+                            DownloadManager.EXTRA_DOWNLOAD_ID, 0);
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(enqueue);
+                    Cursor c = dm.query(query);
+                    if (c.moveToFirst()) {
+                        int columnIndex = c
+                                .getColumnIndex(DownloadManager.COLUMN_STATUS);
+                        if (DownloadManager.STATUS_SUCCESSFUL == c
+                                .getInt(columnIndex)) {
 
+                            ImageView view = (ImageView) getActivity().findViewById(R.id.imageView1);
+                            String uriString = c
+                                    .getString(c
+                                            .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                            view.setImageURI(Uri.parse(uriString));
+                        }
+                    }
+                }
+            }
+        };
+
+        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     @Override
@@ -82,7 +131,7 @@ public class CountryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mProgressBar=(ProgressBar)getActivity().findViewById(R.id.prog_down_items);
-        mProgressBar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
                 try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
@@ -172,7 +221,7 @@ public class CountryFragment extends Fragment {
                         public void onItemClick(View v, int position){
                             if(v.getClass().equals(ImageButton.class))Log.d("CountryFragment", "Click Image button ID="+position);
                             else {
-                                /*Log.d("CountryFragment", "v.getClass()=" + v.getClass());
+                                Log.d("CountryFragment", "v.getClass()=" + v.getClass());
                                 Log.d("CountryFragment", "onItemClick1 ID=" + position);
                                 RegionFragment fragment = new RegionFragment();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -182,9 +231,7 @@ public class CountryFragment extends Fragment {
                                 bundle.putString("key", id);
                                 fragment.setArguments(bundle);
                                 transaction.addToBackStack(null);
-                                transaction.commit();*/
-                                Intent i = new Intent( getActivity(), DownloadManagerActivity.class);
-                                startActivity(i);
+                                transaction.commit();
 
                             }
 
@@ -203,5 +250,101 @@ public class CountryFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+//        filter for notifications - only acts on notification
+//              while download busy
+        IntentFilter filter = new IntentFilter(DownloadManager
+                .ACTION_NOTIFICATION_CLICKED);
+
+        receiverNotificationClicked = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String extraId = DownloadManager
+                        .EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS;
+                long[] references = intent.getLongArrayExtra(extraId);
+                for (long reference : references) {
+                    if (reference == myDownloadReference) {
+//                        do something with the download file
+                    }
+                }
+            }
+        };
+        getActivity().registerReceiver(receiverNotificationClicked, filter);
+
+//        filter for download - on completion
+        IntentFilter intentFilter = new IntentFilter(DownloadManager
+                .ACTION_DOWNLOAD_COMPLETE);
+
+        receiverDownloadComplete = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long reference = intent.getLongExtra(DownloadManager
+                        .EXTRA_DOWNLOAD_ID, -1);
+                if (myDownloadReference == reference) {
+//                    do something with the download file
+                    DownloadManager.Query query = new DownloadManager.Query();
+                    query.setFilterById(reference);
+                    Cursor cursor = downloadManager.query(query);
+
+                    cursor.moveToFirst();
+//                        get the status of the download
+                    int columnIndex = cursor.getColumnIndex(DownloadManager
+                            .COLUMN_STATUS);
+                    int status = cursor.getInt(columnIndex);
+
+                    int fileNameIndex = cursor.getColumnIndex(DownloadManager
+                            .COLUMN_LOCAL_FILENAME);
+                    String savedFilePath = cursor.getString(fileNameIndex);
+
+//                        get the reason - more detail on the status
+                    int columnReason = cursor.getColumnIndex(DownloadManager
+                            .COLUMN_REASON);
+                    int reason = cursor.getInt(columnReason);
+
+                    switch (status) {
+                        case DownloadManager.STATUS_SUCCESSFUL:
+
+//                                start activity to display the downloaded image
+                            Toast.makeText(getActivity(),
+                                    "Start activity to display the downloaded image: " + reason,
+                                    Toast.LENGTH_LONG).show();
+
+                            break;
+                        case DownloadManager.STATUS_FAILED:
+                            Toast.makeText(getActivity(),
+                                    "FAILED: " + reason,
+                                    Toast.LENGTH_LONG).show();
+                            break;
+                        case DownloadManager.STATUS_PAUSED:
+                            Toast.makeText(getActivity(),
+                                    "PAUSED: " + reason,
+                                    Toast.LENGTH_LONG).show();
+                            break;
+                        case DownloadManager.STATUS_PENDING:
+                            Toast.makeText(getActivity(),
+                                    "PENDING!",
+                                    Toast.LENGTH_LONG).show();
+                            break;
+                        case DownloadManager.STATUS_RUNNING:
+                            Toast.makeText(getActivity(),
+                                    "RUNNING!",
+                                    Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                    cursor.close();
+                }
+            }
+        };
+        getActivity().registerReceiver(receiverDownloadComplete, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(receiverDownloadComplete);
+        getActivity().unregisterReceiver(receiverNotificationClicked);
+    }
 }

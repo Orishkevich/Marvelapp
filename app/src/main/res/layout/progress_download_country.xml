@@ -4,13 +4,15 @@
     android:layout_height="wrap_content">
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/prog_down_items"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/map"
-        android:indeterminate="false" />
+        android:indeterminate="false"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"/>
 
     <TextView
         android:id="@+id/map"
@@ -20,10 +22,10 @@
         android:textColor="@color/text_items"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/dm" />
+        android:text="@string/map" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
@@ -32,7 +34,7 @@
         android:layout_alignBottom="@+id/map"
         android:layout_marginEnd="36dp"
         android:layout_toStartOf="@+id/percent"
-        android:text="@string/free" />
+        android:text="@string/down" />
 
     <TextView
         android:id="@+id/percent"
@@ -45,5 +47,16 @@
         android:layout_marginEnd="21dp"
         android:text="TextView"
         android:textColorLink="@color/dark_green" />
+
+    <TextView
+        android:id="@+id/country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/text_items"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="19dp"
+        android:layout_toEndOf="@+id/map"
+        android:text="TextView" />
 
 </RelativeLayout>

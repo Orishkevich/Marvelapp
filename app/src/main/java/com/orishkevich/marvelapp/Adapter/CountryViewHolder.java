@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -20,34 +21,40 @@ import com.orishkevich.marvelapp.R;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
-
+import static java.security.AccessController.getContext;
 
 
 public class CountryViewHolder extends RecyclerView.ViewHolder {
 
     public final static String TAG = "CountryViewHolder";
     private ArrayList<Country> count;
-
+    DownloadManager.Request request;
     private long enqueue;
     private DownloadManager dm;
     private ProgressBar mProgressBar;
-    private DownButtonListener downButtonListener= new DownButtonListener();;
 
+    private TextView textView2;
 
-   // public  ImageButton canc;
+    private TextView textView3;
+    private DownButtonListener downButtonListener= new DownButtonListener();
+
     private CancelButtonListener cancButtonListener= new CancelButtonListener();
 
         public CountryViewHolder(ArrayList<Country> count, final View itemView){
             super(itemView);
             this.count = count;
-            dm = (DownloadManager) itemView.getContext().getSystemService(DOWNLOAD_SERVICE);
+            dm = (DownloadManager)itemView.getContext().getSystemService(DOWNLOAD_SERVICE);
             name_count = (TextView)itemView.findViewById(R.id.recyclerViewItemName);
             down = (ImageButton) itemView.findViewById(R.id.recyclerViewItemDownButton);
             pd=(ProgressBar)itemView.findViewById(R.id.prog_down_item);
             down.setOnClickListener(downButtonListener);
-            mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
+           // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
+            textView2 = (TextView)itemView.findViewById(R.id.percent);
+            textView3 = (TextView)itemView.findViewById(R.id.country);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -58,19 +65,31 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
+
+
+
     public class DownButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-//mProgressBar.setVisibility(View.VISIBLE);
+           // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
+           // mProgressBar.setVisibility(View.VISIBLE);
+            textView3.setText(count.get(getAdapterPosition()).getName());
+            textView2.setText("50%");
             pd.setVisibility(View.VISIBLE);
             down.setImageResource(R.drawable.ic_action_remove_dark);
             down.setOnClickListener(cancButtonListener);
-
-            DownloadManager.Request request = new DownloadManager.Request(
+            request = new DownloadManager.Request(
             Uri.parse(count.get(getAdapterPosition()).getAdress()));
-            enqueue = dm.enqueue(request);
+            request.setDescription("Map Download")
+                    .setTitle(count.get(getAdapterPosition()).getName());
+            request.setVisibleInDownloadsUi(true);
+            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);
+
+
+
             startProgress();
+
 
 
         }
@@ -125,30 +144,32 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         this.pd = pd;
     }
 
-private void startProgress(){
+private  void startProgress(){
     try{
-
-        Timer myTimer = new Timer();
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                DownloadManager.Query q = new DownloadManager.Query();
-                q.setFilterById(enqueue);
-                final Cursor cursor = dm.query(q);
-                cursor.moveToFirst();
-                long bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-                cursor.close();
-                final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
-                Thread t = new Thread(new Runnable() {
+                enqueue = dm.enqueue(request);
+                Timer myTimer = new Timer();
+                myTimer.schedule(new TimerTask() {
+                    @Override
                     public void run() {
-                        pd.setProgress(dl_progress);
-                    }
-                });
-                t.start();
+                        DownloadManager.Query q = new DownloadManager.Query();
+                        q.setFilterById(enqueue);
+                        final Cursor cursor = dm.query(q);
+                        cursor.moveToFirst();
+                        long bytes_downloaded = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                        long bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                        cursor.close();
+                        final int dl_progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+                        Thread tt = new Thread(new Runnable() {
+                            public void run() {
+                                pd.setProgress(dl_progress);
+                            }
+                        });
+                        tt.start();
 
-            }
-        }, 0, 10);}
+                    }
+                }, 0, 10);
+
+    }
     catch (Exception e) {
         Log.d("CountryViewHolder", "Error"+ e.getMessage() );
         e.printStackTrace();

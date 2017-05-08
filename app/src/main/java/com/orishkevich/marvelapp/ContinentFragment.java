@@ -1,42 +1,28 @@
 package com.orishkevich.marvelapp;
 
-import android.app.ActivityManager;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orishkevich.marvelapp.Adapter.ContinentAdapter;
-import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Continent;
-import com.orishkevich.marvelapp.Model.Country;
 
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.Context.ACTIVITY_SERVICE;
 
 public class ContinentFragment extends Fragment {
 
@@ -88,7 +74,7 @@ public class ContinentFragment extends Fragment {
             Log.d("ContinentFragment=", "onFailure"+t.getMessage());
         }
        ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
-        TextView textView3 = (TextView)getActivity().findViewById(R.id.textView3);
+        TextView textView3 = (TextView)getActivity().findViewById(R.id.percent);
         textView3.setText(bytesToHuman(FreeMemory()));
         Log.d("ContinentFragment=", "TotalMemory()="+TotalMemory());
         Log.d("ContinentFragment=", "FreeMemory()="+FreeMemory());

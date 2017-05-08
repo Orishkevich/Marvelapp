@@ -11,4 +11,6 @@
     <string name="total">Total:</string>
     <string name="free_space">393.89 MB</string>
     <string name="dm">Device memory</string>
+    <string name="map">Map:</string>
+    <string name="down">Downloaded:</string>
 </resources>

@@ -7,21 +7,16 @@
     android:orientation="vertical"
     android:background="?android:colorBackground">
 
-    <ProgressBar
-        android:id="@+id/prog_down_items"
-        style="@android:style/Widget.ProgressBar.Horizontal"
+    <include
+        layout="@layout/progress_download_country"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        />
+        android:layout_height="50dp" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/my_recycler_view"
         android:layout_below="@+id/prog_down" />
-
 
 
 </LinearLayout >
