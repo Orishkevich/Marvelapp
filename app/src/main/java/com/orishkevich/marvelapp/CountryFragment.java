@@ -20,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +34,12 @@ import android.widget.Toast;
 
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Country;
+import com.orishkevich.marvelapp.Model.MessageEvent;
 
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -60,7 +65,9 @@ public class CountryFragment extends Fragment {
     final String LOG_TAG = "CountryFragment";
     boolean map=true;
     boolean download=false;
+    private TextView textView2;
 
+    private TextView textView3;
     private long enqueue;
     private DownloadManager dm;
     protected ProgressBar mProgressBar;
@@ -74,7 +81,7 @@ public class CountryFragment extends Fragment {
     private long myDownloadReference= enqueue;
     private BroadcastReceiver receiverDownloadComplete;
     private BroadcastReceiver receiverNotificationClicked;
-
+    View viewById;
 
 
     public CountryFragment() {
@@ -96,7 +103,7 @@ public class CountryFragment extends Fragment {
 
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+     /*   BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -123,15 +130,13 @@ public class CountryFragment extends Fragment {
             }
         };
 
-        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        getActivity().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));*/
     }
 
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressBar=(ProgressBar)getActivity().findViewById(R.id.prog_down_items);
-        mProgressBar.setVisibility(View.VISIBLE);
 
                 try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
@@ -250,7 +255,7 @@ public class CountryFragment extends Fragment {
     }
 
 
-    @Override
+    /*@Override
     public void onResume() {
         super.onResume();
 
@@ -346,5 +351,31 @@ public class CountryFragment extends Fragment {
         super.onPause();
         getActivity().unregisterReceiver(receiverDownloadComplete);
         getActivity().unregisterReceiver(receiverNotificationClicked);
+    }*/
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    // В этом методе-колбэке мы получаем наши данные
+    // (объект `event` типа класса-модели MessageEvent)
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent event){
+
+        textView2 = (TextView)getActivity().findViewById(R.id.percent);
+        textView3 = (TextView)getActivity().findViewById(R.id.country);
+        viewById = getActivity().findViewById(R.id.PD);
+        viewById.setVisibility(View.VISIBLE);
+        textView3.setText(event.message);
+        textView2.setText("50%");
+        Log.d("CountryFragment", "onEvent=" +  event.message);
+
     }
 }

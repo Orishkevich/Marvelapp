@@ -15,8 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.orishkevich.marvelapp.Model.Country;
+import com.orishkevich.marvelapp.Model.MessageEvent;
 import com.orishkevich.marvelapp.R;
 
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -37,9 +40,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     private DownloadManager dm;
     private ProgressBar mProgressBar;
 
-    private TextView textView2;
 
-    private TextView textView3;
     private DownButtonListener downButtonListener= new DownButtonListener();
 
     private CancelButtonListener cancButtonListener= new CancelButtonListener();
@@ -53,8 +54,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
             pd=(ProgressBar)itemView.findViewById(R.id.prog_down_item);
             down.setOnClickListener(downButtonListener);
            // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
-            textView2 = (TextView)itemView.findViewById(R.id.percent);
-            textView3 = (TextView)itemView.findViewById(R.id.country);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,8 +74,8 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         public void onClick(View v) {
            // mProgressBar=(ProgressBar)itemView.findViewById(R.id.prog_down_items);
            // mProgressBar.setVisibility(View.VISIBLE);
-            textView3.setText(count.get(getAdapterPosition()).getName());
-            textView2.setText("50%");
+          //  textView3.setText(count.get(getAdapterPosition()).getName());
+          //  textView2.setText("50%");
             pd.setVisibility(View.VISIBLE);
             down.setImageResource(R.drawable.ic_action_remove_dark);
             down.setOnClickListener(cancButtonListener);
@@ -85,6 +85,8 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
                     .setTitle(count.get(getAdapterPosition()).getName());
             request.setVisibleInDownloadsUi(true);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);
+
+
 
 
 
@@ -145,6 +147,9 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     }
 
 private  void startProgress(){
+
+    EventBus.getDefault().post(new MessageEvent(count.get(getAdapterPosition()).getName()));
+
     try{
                 enqueue = dm.enqueue(request);
                 Timer myTimer = new Timer();
