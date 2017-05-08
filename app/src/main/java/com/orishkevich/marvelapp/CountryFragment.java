@@ -45,10 +45,8 @@ public class CountryFragment extends Fragment {
 
     public static final String MESSAGE_PROGRESS = "message_progress";
     private static final int PERMISSION_REQUEST_CODE = 1;
-
-    @BindView(R.id.prog_down) ProgressBar mProgressBar;
-    @BindView(R.id.progress_text)  TextView mProgressText;
-
+    private ProgressBar mProgressBar;
+    private TextView mProgressText;
     private RecyclerView rvMain;
     private CountryAdapter countryAdapter;
     private LinearLayoutManager layoutManager;
@@ -83,15 +81,10 @@ public class CountryFragment extends Fragment {
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mProgressBar=(ProgressBar)getActivity().findViewById(R.id.prog_down_items);
+        mProgressBar.setVisibility(View.GONE);
 
-
-        ProgressBar progDown=(ProgressBar)getActivity().findViewById(R.id.prog_down);
-        //progDown.setVisibility(View.GONE);
-
-
-
-
-        try {
+                try {
             XmlPullParser xpp =getResources().getXml(R.xml.regions);
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
                 switch (xpp.getEventType()) {

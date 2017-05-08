@@ -10,8 +10,10 @@ import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -36,12 +38,14 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 public class MainActivity extends AppCompatActivity {
     private ContinentFragment ff;
     private FragmentTransaction fT;
-Context context;
-
+    private ProgressBar mProgressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       mProgressBar=(ProgressBar)findViewById(R.id.prog_down_main);
+       mProgressBar.setVisibility(View.GONE);
 
         setTitle("Continent");
         ff = new ContinentFragment();

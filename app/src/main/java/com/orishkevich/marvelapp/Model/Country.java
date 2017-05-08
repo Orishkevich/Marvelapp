@@ -41,7 +41,7 @@ public class Country {
         name = name;
     }
 
-    public Country(String name,boolean map,boolean dowload,String country) {
+    public Country(String name,boolean map,boolean dowload,String continent) {
         this.name = name;
         this.map = map;
         this.dowload = dowload;
@@ -57,9 +57,8 @@ public class Country {
         this.map = map;
     }
 
-public String getAdress(Country count){
+public String getAdress(){
     //http://download.osmand.net/download.php?standard=yes&file=Denmark_europe_2.obf.zip)
-
-    return count.getName()+"_"+count.getContinent()+"_2.obf.zip";
+    return "http://download.osmand.net/download.php?standard=yes&file="+getName()+"_"+getContinent()+"_2.obf.zip";
 }
 }

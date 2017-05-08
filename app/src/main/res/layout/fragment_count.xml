@@ -8,12 +8,13 @@
     android:background="?android:colorBackground">
 
     <ProgressBar
-        android:id="@+id/prog_down"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:id="@+id/prog_down_items"
+        style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:indeterminate="false" />
-
+        android:layout_height="wrap_content"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

@@ -57,7 +57,7 @@ public class ContinentFragment extends Fragment {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("ContinentFragment", "onCreate");
+
 
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
@@ -87,11 +87,13 @@ public class ContinentFragment extends Fragment {
         } catch (Throwable t) {
             Log.d("ContinentFragment=", "onFailure"+t.getMessage());
         }
-      ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
+       ProgressBar progressBar = (ProgressBar) getActivity().findViewById(R.id.progressBar);
         TextView textView3 = (TextView)getActivity().findViewById(R.id.textView3);
         textView3.setText(bytesToHuman(FreeMemory()));
-        progressBar.setMax(TotalMemory());
-        progressBar.setProgress(FreeMemory());
+        Log.d("ContinentFragment=", "TotalMemory()="+TotalMemory());
+        Log.d("ContinentFragment=", "FreeMemory()="+FreeMemory());
+        progressBar.setMax((int)(TotalMemory()/100l));
+        progressBar.setProgress((int)(BusyMemory()/100l));
 
         rvMain = (RecyclerView)getActivity().findViewById(R.id.recycler_view_cont);
         layoutManager = new LinearLayoutManager(getActivity());
@@ -121,27 +123,28 @@ public class ContinentFragment extends Fragment {
 
     }
 
-    public int TotalMemory()
+    public long TotalMemory()
     {
 
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
-        int   Total  = (  statFs.getBlockCount() *  statFs.getBlockSize());
+        StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
+        long   Total  = (  statFs.getBlockCountLong() *  statFs.getBlockSizeLong());
+        Log.d("ContinentFragment=", "Total="+Total);
         return Total;
     }
 
-    public int FreeMemory()
+    public long FreeMemory()
     {
-        StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
-        int   Free   = (statFs.getAvailableBlocks() *  statFs.getBlockSize());
+        StatFs statFs = new StatFs( Environment.getDataDirectory().getPath());
+        long   Free   = (statFs.getAvailableBlocksLong() *  statFs.getBlockSizeLong());
+        Log.d("ContinentFragment=", "Free="+Free);
         return Free;
     }
 
     public long BusyMemory()
     {
         StatFs statFs = new StatFs(Environment.getRootDirectory().getAbsolutePath());
-        long   Total  = ((long) statFs.getBlockCount() * (long) statFs.getBlockSize());
-        long   Free   = (statFs.getAvailableBlocks()   * (long) statFs.getBlockSize());
-        long   Busy   = Total - Free;
+
+        long   Busy   = TotalMemory() - FreeMemory();
         return Busy;
     }
     public static String floatForm (double d)
