@@ -9,15 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 public class RegionFragment extends Fragment {
-
 
 
     public RegionFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -32,8 +29,6 @@ public class RegionFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_region, container, false);
     }
-
-
 
 
 }

@@ -14,9 +14,16 @@ public class MessageEvent {
     }
 
     public final String message;
-    public final int  dl;
-    public MessageEvent(String message, int dl) {
+    public final int dl;
+
+    public boolean getQd() {
+        return qD;
+    }
+
+    public final boolean qD;
+    public MessageEvent(String message, int dl,boolean qD) {
         this.message = message;
         this.dl = dl;
+        this.qD=qD;
     }
 }

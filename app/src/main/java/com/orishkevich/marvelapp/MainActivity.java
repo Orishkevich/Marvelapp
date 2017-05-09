@@ -1,7 +1,6 @@
 package com.orishkevich.marvelapp;
 
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -44,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       mProgressBar=(ProgressBar)findViewById(R.id.prog_down_main);
-       mProgressBar.setVisibility(View.GONE);
+        mProgressBar = (ProgressBar) findViewById(R.id.prog_down_main);
+        mProgressBar.setVisibility(View.GONE);
 
         setTitle("Continent");
         ff = new ContinentFragment();
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         fT.addToBackStack(null);
         fT.commit();
     }
-    }
+}
 
 
 
