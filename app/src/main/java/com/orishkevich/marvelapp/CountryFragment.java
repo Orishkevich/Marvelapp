@@ -386,7 +386,7 @@ public class CountryFragment extends Fragment {
             }
         });
         tt.start();
-        Log.d("CountryFragment", "onEvent=" +  event.getMessage());
+
 
     }
 }

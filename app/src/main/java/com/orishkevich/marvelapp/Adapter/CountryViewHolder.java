@@ -2,7 +2,10 @@ package com.orishkevich.marvelapp.Adapter;
 
 import android.app.DownloadManager;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 
 import android.net.Uri;
@@ -32,7 +35,7 @@ import static java.security.AccessController.getContext;
 
 
 public class CountryViewHolder extends RecyclerView.ViewHolder {
-
+    private BroadcastReceiver receiverDownloadComplete;
     public final static String TAG = "CountryViewHolder";
     private ArrayList<Country> count;
     DownloadManager.Request request;
@@ -83,9 +86,63 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
                     .setTitle(count.get(getAdapterPosition()).getName());
             request.setVisibleInDownloadsUi(true);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);
-
             enqueue = dm.enqueue(request);
 
+ //filter for download - on completion
+ IntentFilter intentFilter = new IntentFilter(DownloadManager
+ .ACTION_DOWNLOAD_COMPLETE);
+
+ receiverDownloadComplete = new BroadcastReceiver() {
+@Override
+public void onReceive(Context context, Intent intent) {
+long reference = intent.getLongExtra(DownloadManager
+.EXTRA_DOWNLOAD_ID, -1);
+if (enqueue == reference) {
+//                    do something with the doGwnload file
+DownloadManager.Query query = new DownloadManager.Query();
+query.setFilterById(reference);
+Cursor cursor = dm .query(query);
+
+cursor.moveToFirst();
+//                        get the status of the download
+int columnIndex = cursor.getColumnIndex(DownloadManager
+.COLUMN_STATUS);
+int status = cursor.getInt(columnIndex);
+
+int fileNameIndex = cursor.getColumnIndex(DownloadManager
+.COLUMN_LOCAL_FILENAME);
+String savedFilePath = cursor.getString(fileNameIndex);
+
+//                        get the reason - more detail on the status
+int columnReason = cursor.getColumnIndex(DownloadManager
+.COLUMN_REASON);
+int reason = cursor.getInt(columnReason);
+
+switch (status) {
+case DownloadManager.STATUS_SUCCESSFUL:
+
+//                                start activity to display the downloaded image
+    Log.d("BroadcastReceiver", "STATUS_SUCCESSFUL" );
+
+break;
+case DownloadManager.STATUS_FAILED:
+    Log.d("BroadcastReceiver", "STATUS_FAILED" );
+break;
+case DownloadManager.STATUS_PAUSED:
+    Log.d("BroadcastReceiver", "STATUS_PAUSED" );
+break;
+case DownloadManager.STATUS_PENDING:
+    Log.d("BroadcastReceiver", "STATUS_PENDING" );
+break;
+case DownloadManager.STATUS_RUNNING:
+    Log.d("BroadcastReceiver", "STATUS_RUNNING" );
+break;
+}
+cursor.close();
+}
+}
+};
+            itemView.getContext().registerReceiver(receiverDownloadComplete, intentFilter);
 
 
             startProgress();
