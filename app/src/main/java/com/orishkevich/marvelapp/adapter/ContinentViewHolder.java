@@ -1,4 +1,4 @@
-package com.orishkevich.marvelapp.Adapter;
+package com.orishkevich.marvelapp.adapter;
 
 
 

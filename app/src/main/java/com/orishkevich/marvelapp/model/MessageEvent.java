@@ -1,4 +1,4 @@
-package com.orishkevich.marvelapp.Model;
+package com.orishkevich.marvelapp.model;
 
 /**
  * Created by Инженер-конструктор on 08.05.2017.

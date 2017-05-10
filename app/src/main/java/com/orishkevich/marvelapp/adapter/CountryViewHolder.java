@@ -1,4 +1,4 @@
-package com.orishkevich.marvelapp.Adapter;
+package com.orishkevich.marvelapp.adapter;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -15,8 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.orishkevich.marvelapp.Model.Country;
-import com.orishkevich.marvelapp.Model.MessageEvent;
+import com.orishkevich.marvelapp.model.Country;
+import com.orishkevich.marvelapp.model.MessageEvent;
 import com.orishkevich.marvelapp.R;
 
 import org.greenrobot.eventbus.EventBus;

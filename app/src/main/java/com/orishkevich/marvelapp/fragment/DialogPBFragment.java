@@ -1,31 +1,24 @@
-package com.orishkevich.marvelapp;
+package com.orishkevich.marvelapp.fragment;
 /**
  * Необходимо тут использовать RecycleView.
  * Google теперь не рекомендует использовать ProgressDialog в новых версиях Androd.
  */
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.orishkevich.marvelapp.Model.MessageEvent;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+import com.orishkevich.marvelapp.R;
 
 
-class DialogPBFragment extends DialogFragment implements
+public class DialogPBFragment extends DialogFragment implements
         DialogInterface.OnClickListener {
-    private View viewById;
+
     protected ProgressBar mProgressBar;
     private TextView textView2;
     private boolean offfOn;

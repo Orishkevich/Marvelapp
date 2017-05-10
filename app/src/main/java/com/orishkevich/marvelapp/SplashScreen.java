@@ -16,7 +16,6 @@ public class SplashScreen extends AppCompatActivity {
     private ImageView mImageView;
     private Animation mEnlargeAnimation;
 
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -27,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-//типа анимация
+// анимация
         mImageView = (ImageView) findViewById(R.id.store_logo_load);
         mEnlargeAnimation = AnimationUtils.loadAnimation(this, R.anim.enlarge);
         mImageView.startAnimation(mEnlargeAnimation);

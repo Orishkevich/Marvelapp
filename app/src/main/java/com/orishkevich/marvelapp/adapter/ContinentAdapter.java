@@ -1,11 +1,10 @@
-package com.orishkevich.marvelapp.Adapter;
+package com.orishkevich.marvelapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.orishkevich.marvelapp.Model.Continent;
+import com.orishkevich.marvelapp.model.Continent;
 import com.orishkevich.marvelapp.R;
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.orishkevich.marvelapp.Adapter;
+package com.orishkevich.marvelapp.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

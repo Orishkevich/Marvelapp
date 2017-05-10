@@ -1,4 +1,4 @@
-package com.orishkevich.marvelapp;
+package com.orishkevich.marvelapp.fragment;
 /**Фрагмент со странами*/
 
 import android.app.DownloadManager;
@@ -18,9 +18,10 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.orishkevich.marvelapp.Adapter.CountryAdapter;
-import com.orishkevich.marvelapp.Model.Country;
-import com.orishkevich.marvelapp.Model.MessageEvent;
+import com.orishkevich.marvelapp.adapter.CountryAdapter;
+import com.orishkevich.marvelapp.model.Country;
+import com.orishkevich.marvelapp.model.MessageEvent;
+import com.orishkevich.marvelapp.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,20 +41,19 @@ public class CountryFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     private ArrayList<Country> count;
     private String country;
-    final String LOG_TAG = "CountryFragment";
-    boolean map = true;
-    boolean download = false;
-    private TextView textView2;
-    boolean offfOn;
-    private TextView textView3;
+    private final String LOG_TAG = "CountryFragment";
+    private boolean map = true;
+    private boolean download = false;
+    private TextView percent;
+    private boolean offfOn;
+    private TextView countryLayout;
     private long enqueue;
     private DownloadManager dm;
-    protected ProgressBar mProgressBar;
+    private ProgressBar mProgressBar;
     private View viewById;
-
-    public SharedPreferences sharedPrefs;
-    public String myPrefs = "myPrefs";
-    public static final String countrySave = "countrySave";
+    private SharedPreferences sharedPrefs;
+    private String myPrefs = "myPrefs";
+    private static final String countrySave = "countrySave";
 
 
     public CountryFragment() {
@@ -65,15 +65,10 @@ public class CountryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_count, container, false);
         count = new ArrayList<>();
         Bundle bundle = getArguments();
-
         if (bundle != null) {
             country = firstDownCase(bundle.getString("key"));
         }
-        Log.d(LOG_TAG, "START_onCreateView");
-
-
-
-        sharedPrefs = this.getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
+         sharedPrefs = this.getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
         if (sharedPrefs.contains(countrySave)) {
             country=sharedPrefs.getString(countrySave, "");
             Log.d(LOG_TAG, "sharedPrefs="+ country );
@@ -87,26 +82,21 @@ public class CountryFragment extends Fragment {
 
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "START_onCreate="+ country );
 
         sharedPrefs = this.getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
         if (sharedPrefs.contains(countrySave)) {
             country=sharedPrefs.getString(countrySave, "");
-            Log.d(LOG_TAG, "sharedPrefs="+ country );
+
         }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(LOG_TAG, "START_onViewCreated="+ country );
-
-        textView3 = (TextView) getActivity().findViewById(R.id.country);
+        countryLayout = (TextView) getActivity().findViewById(R.id.country);
         viewById = getActivity().findViewById(R.id.PD);
-        textView2 = (TextView) getActivity().findViewById(R.id.percent);
+        percent = (TextView) getActivity().findViewById(R.id.percent);
         mProgressBar = (ProgressBar) getActivity().findViewById(R.id.prog_down_items);
-
-
         mProgressBar.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -133,9 +123,7 @@ public class CountryFragment extends Fragment {
                             if (xpp.getAttributeValue(i).equals(country)) {
                                 for (int j = 0; j < xpp.getAttributeCount(); j++) {
                                     if (xpp.getAttributeName(j).equals("name")) {
-
                                         xpp.next();
-
                                         while ((xpp.getEventType() == XmlPullParser.START_TAG) &&
                                                 !(xpp.getAttributeValue(0).equals("continent"))) {
                                             if ((xpp.getAttributeName(0).equals("name")
@@ -171,22 +159,16 @@ public class CountryFragment extends Fragment {
 
                         }
                         break;
-
                     case XmlPullParser.END_TAG:
-
                         break;
-
                     case XmlPullParser.TEXT:
-
                         break;
-
                     default:
                         break;
                 }
 
                 xpp.next();
             }
-            Log.d(LOG_TAG, "END_DOCUMENT");
 
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -205,8 +187,7 @@ public class CountryFragment extends Fragment {
                 if (v.getClass().equals(ImageButton.class))
                     Log.d("CountryFragment", "Click Image button ID=" + position);
                 else {
-                    Log.d("CountryFragment", "v.getClass()=" + v.getClass());
-                    Log.d("CountryFragment", "onItemClick1 ID=" + position);
+
                     RegionFragment fragment = new RegionFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, fragment, "Region");
@@ -251,17 +232,15 @@ public class CountryFragment extends Fragment {
     public void onEvent(MessageEvent event) {
         offfOn = event.getQd();
         if (!offfOn) {
-            textView2 = (TextView) getActivity().findViewById(R.id.percent);
+            percent = (TextView) getActivity().findViewById(R.id.percent);
 
             viewById.setVisibility(View.VISIBLE);
-            textView3.setText(event.message);
+            countryLayout.setText(event.message);
             final int dl = event.getDl();
-            textView2.setText(String.valueOf(dl) + " %");
+            percent.setText(String.valueOf(dl) + " %");
             Thread tt = new Thread(new Runnable() {
                 public void run() {
-
                     mProgressBar.setProgress(dl);
-
                 }
             });
             tt.start();
