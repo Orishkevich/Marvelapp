@@ -74,15 +74,16 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onClick(View v) {
-            Log.d("CountryViewHolder", "DownButtonListener"+queueDown);
+
             if (queueDown){
-                Log.d("CountryViewHolder", "DownButtonListenerStart");
+
                 queueDown=false;
                 pd.setVisibility(View.VISIBLE);
             down.setImageResource(R.drawable.ic_action_remove_dark);
             down.setOnClickListener(cancButtonListener);
             request = new DownloadManager.Request(
                     Uri.parse(count.get(getAdapterPosition()).getAdress()));
+                Log.d("CountryViewHolder", "DownButtonListener"+ count.get(getAdapterPosition()).getAdress());
             request.setDescription("Map Download")
                     .setTitle(count.get(getAdapterPosition()).getName());
             request.setVisibleInDownloadsUi(true);

@@ -55,6 +55,11 @@ public class Country {
 
     public String getAdress() {
         //http://download.osmand.net/download.php?standard=yes&file=Denmark_europe_2.obf.zip)
-        return "http://download.osmand.net/download.php?standard=yes&file=" + getName() + "_" + getContinent() + "_2.obf.zip";
+        return "http://download.osmand.net/download.php?standard=yes&file=" + getName() + "_" + firstDownCase(getContinent()) + "_2.obf.zip";
+    }
+
+    public String firstDownCase(String word) {
+        if (word == null || word.isEmpty()) return "";//или return word;
+        return word.substring(0, 1).toLowerCase() + word.substring(1);
     }
 }
