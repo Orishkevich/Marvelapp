@@ -1,5 +1,7 @@
 package com.orishkevich.marvelapp;
-
+/**Список регионов по стране
+ *
+ * В стадии разработки*/
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;

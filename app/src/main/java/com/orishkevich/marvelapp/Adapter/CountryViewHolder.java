@@ -69,7 +69,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-
+//загрузка карты
     public class DownButtonListener implements View.OnClickListener {
 
         @Override
@@ -89,7 +89,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
             enqueue = dm.enqueue(request);
 
-
+//отслеживание процесса загрузки
             IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
             receiverDownloadComplete = new BroadcastReceiver() {
                 @Override
@@ -154,7 +154,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
 
     }
     }
-
+//отмена загрузки
     private class CancelButtonListener implements View.OnClickListener {
 
         @Override
@@ -203,7 +203,7 @@ public class CountryViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void startProgress() {
-
+// создание progress Bar
 
             try {
 

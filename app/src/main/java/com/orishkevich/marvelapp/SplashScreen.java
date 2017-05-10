@@ -27,13 +27,9 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
+//типа анимация
         mImageView = (ImageView) findViewById(R.id.store_logo_load);
-
-        // подключаем файл анимации
         mEnlargeAnimation = AnimationUtils.loadAnimation(this, R.anim.enlarge);
-
-        // при запуске начинаем с эффекта увеличения
         mImageView.startAnimation(mEnlargeAnimation);
 
         new Handler().postDelayed(new Runnable() {

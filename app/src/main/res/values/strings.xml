@@ -13,4 +13,5 @@
     <string name="dm">Device memory</string>
     <string name="map">Map:</string>
     <string name="down">Downloaded:</string>
+    <string name="close">Close</string>
 </resources>

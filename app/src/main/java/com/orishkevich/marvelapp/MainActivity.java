@@ -1,5 +1,5 @@
 package com.orishkevich.marvelapp;
-
+/**загрузка фрагмента с континентами*/
 
 import android.app.Activity;
 import android.content.Context;

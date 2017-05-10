@@ -1,5 +1,7 @@
 package com.orishkevich.marvelapp;
-
+/**Фрагмент с континентами**/
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -29,7 +31,12 @@ public class ContinentFragment extends Fragment {
     private ContinentAdapter contAdapter;
     private LinearLayoutManager layoutManager;
     private ArrayList<Continent> cont;
-    private String id;
+    private String id;//country
+    private String token;
+    public SharedPreferences sharedPrefs;
+    public String myPrefs = "myPrefs";
+    public static final String countrySave = "countrySave";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,6 +51,7 @@ public class ContinentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
 
+        sharedPrefs = getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
 
@@ -57,6 +65,7 @@ public class ContinentFragment extends Fragment {
 
         Log.d("ContinentFragment", "onViewCreate");
         try {
+            //парсинг континентов
             XmlPullParser parser = getResources().getXml(R.xml.regions);
 
             while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
@@ -90,12 +99,13 @@ public class ContinentFragment extends Fragment {
         contAdapter.setOnItemClickListener(new ContinentAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-
+                id = cont.get(position).getName();
+                saveCountry(id);
                 CountryFragment fragment = new CountryFragment();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.frame, fragment, "Country");
                 Bundle bundle = new Bundle();
-                id = cont.get(position).getName();
+
                 bundle.putString("key", id);
                 Log.d("CountryFragment", "onItemClick1 ID=" + id);
                 fragment.setArguments(bundle);
@@ -107,7 +117,7 @@ public class ContinentFragment extends Fragment {
         });
 
     }
-
+/**Определение парметров памяти*/
     public long TotalMemory() {
 
         StatFs statFs = new StatFs(Environment.getDataDirectory().getPath());
@@ -157,6 +167,12 @@ public class ContinentFragment extends Fragment {
     public String firstUpperCase(String word) {
         if (word == null || word.isEmpty()) return "";//или return word;
         return word.substring(0, 1).toUpperCase() + word.substring(1);
+    }
+    private void saveCountry(String count) {
+
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putString(countrySave, count);
+        editor.apply();
     }
 }
 

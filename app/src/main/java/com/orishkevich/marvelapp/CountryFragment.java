@@ -1,40 +1,26 @@
 package com.orishkevich.marvelapp;
+/**Фрагмент со странами*/
 
-
-import android.Manifest;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.orishkevich.marvelapp.Adapter.CountryAdapter;
 import com.orishkevich.marvelapp.Model.Country;
 import com.orishkevich.marvelapp.Model.MessageEvent;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,10 +31,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 
 public class CountryFragment extends Fragment {
 
@@ -57,7 +39,7 @@ public class CountryFragment extends Fragment {
     private CountryAdapter countryAdapter;
     private LinearLayoutManager layoutManager;
     private ArrayList<Country> count;
-    private String id;
+    private String country;
     final String LOG_TAG = "CountryFragment";
     boolean map = true;
     boolean download = false;
@@ -69,6 +51,10 @@ public class CountryFragment extends Fragment {
     protected ProgressBar mProgressBar;
     private View viewById;
 
+    public SharedPreferences sharedPrefs;
+    public String myPrefs = "myPrefs";
+    public static final String countrySave = "countrySave";
+
 
     public CountryFragment() {
     }
@@ -79,10 +65,21 @@ public class CountryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_count, container, false);
         count = new ArrayList<>();
         Bundle bundle = getArguments();
+
         if (bundle != null) {
-            id = firstDownCase(bundle.getString("key"));
+            country = firstDownCase(bundle.getString("key"));
+        }
+        Log.d(LOG_TAG, "START_onCreateView");
+
+
+
+        sharedPrefs = this.getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
+        if (sharedPrefs.contains(countrySave)) {
+            country=sharedPrefs.getString(countrySave, "");
+            Log.d(LOG_TAG, "sharedPrefs="+ country );
         }
         return view;
+
     }
 
     @Override
@@ -90,28 +87,50 @@ public class CountryFragment extends Fragment {
 
         //setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "START_onCreate="+ country );
 
+        sharedPrefs = this.getActivity().getSharedPreferences(myPrefs, Context.MODE_PRIVATE);
+        if (sharedPrefs.contains(countrySave)) {
+            country=sharedPrefs.getString(countrySave, "");
+            Log.d(LOG_TAG, "sharedPrefs="+ country );
+        }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(LOG_TAG, "START_onViewCreated="+ country );
 
+        textView3 = (TextView) getActivity().findViewById(R.id.country);
+        viewById = getActivity().findViewById(R.id.PD);
+        textView2 = (TextView) getActivity().findViewById(R.id.percent);
+        mProgressBar = (ProgressBar) getActivity().findViewById(R.id.prog_down_items);
+
+
+        mProgressBar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                DialogPBFragment myDialogFragment = new DialogPBFragment();
+                myDialogFragment.show(manager, "dialog");
+
+            }
+        });
 
         try {
+            //парсинг стран по континенту
+            Log.d(LOG_TAG, "START_PARSING"+ country );
             XmlPullParser xpp = getResources().getXml(R.xml.regions);
             while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
                 switch (xpp.getEventType()) {
-                    // начало документа
                     case XmlPullParser.START_DOCUMENT:
                         Log.d(LOG_TAG, "START_DOCUMENT");
                         break;
-                    // начало тэга
                     case XmlPullParser.START_TAG:
 
                         for (int i = 0; i < xpp.getAttributeCount(); i++) {
 
-                            if (xpp.getAttributeValue(i).equals(id)) {
+                            if (xpp.getAttributeValue(i).equals(country)) {
                                 for (int j = 0; j < xpp.getAttributeCount(); j++) {
                                     if (xpp.getAttributeName(j).equals("name")) {
 
@@ -138,7 +157,7 @@ public class CountryFragment extends Fragment {
                                                 }
                                                 Log.d(LOG_TAG, "Country=" + xpp.getAttributeValue(0));
                                                 Log.d(LOG_TAG, "Map=" + map);
-                                                count.add(new Country(firstUpperCase(xpp.getAttributeValue(0)), map, download, id));
+                                                count.add(new Country(firstUpperCase(xpp.getAttributeValue(0)), map, download, country));
                                                 xpp.next();
                                                 while (xpp.getDepth() > 3) {
                                                     xpp.next();
@@ -152,11 +171,11 @@ public class CountryFragment extends Fragment {
 
                         }
                         break;
-                    // конец тэга
+
                     case XmlPullParser.END_TAG:
 
                         break;
-                    // содержимое тэга
+
                     case XmlPullParser.TEXT:
 
                         break;
@@ -164,7 +183,7 @@ public class CountryFragment extends Fragment {
                     default:
                         break;
                 }
-                // следующий элемент
+
                 xpp.next();
             }
             Log.d(LOG_TAG, "END_DOCUMENT");
@@ -192,8 +211,8 @@ public class CountryFragment extends Fragment {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.frame, fragment, "Region");
                     Bundle bundle = new Bundle();
-                    id = count.get(position).getName();
-                    bundle.putString("key", id);
+                    country= count.get(position).getName();
+                    bundle.putString("key", country);
                     fragment.setArguments(bundle);
                     transaction.addToBackStack(null);
                     transaction.commit();
@@ -215,7 +234,6 @@ public class CountryFragment extends Fragment {
     }
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -228,21 +246,17 @@ public class CountryFragment extends Fragment {
         EventBus.getDefault().unregister(this);
     }
 
-
+//отслеживание загрузки
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MessageEvent event) {
-        offfOn=event.getQd();
-        if (!offfOn) {            textView2 = (TextView) getActivity().findViewById(R.id.percent);
-            textView3 = (TextView) getActivity().findViewById(R.id.country);
-            viewById = getActivity().findViewById(R.id.PD);
+        offfOn = event.getQd();
+        if (!offfOn) {
+            textView2 = (TextView) getActivity().findViewById(R.id.percent);
+
             viewById.setVisibility(View.VISIBLE);
-            mProgressBar = (ProgressBar) getActivity().findViewById(R.id.prog_down_items);
             textView3.setText(event.message);
             final int dl = event.getDl();
-
             textView2.setText(String.valueOf(dl) + " %");
-
-
             Thread tt = new Thread(new Runnable() {
                 public void run() {
 
@@ -251,7 +265,7 @@ public class CountryFragment extends Fragment {
                 }
             });
             tt.start();
-            offfOn=false;//???
+            offfOn = false;//???
         }
     }
 }
